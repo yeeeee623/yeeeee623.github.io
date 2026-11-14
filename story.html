@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>我的故事｜怡穎的小角落</title>
+<meta name="description" content="怡穎的故事，從一顆種子慢慢長成一棵樹。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f1ea; --card:#fffdf8; --ink:#2b2622; --soft:#7a7068; --line:#e7dfd4;
+  --accent:#3d6e8a; --accent2:#c98a6b; --chip:#e4edf2;
+  --trunk:#8a6a4f; --leaf1:#a9cfa0; --leaf2:#77ad7c; --leaf3:#3f7a55; --ginkgo:#dcb54c; --ground:#e6dccb; --flower:#ec9f9b; --pistil:#f4d67c;
+  --shadow:0 6px 24px rgba(60,45,30,.08);
+}
+[data-theme="dark"]{
+  --bg:#171615; --card:#22201e; --ink:#ede6dd; --soft:#a39a90; --line:#36322e;
+  --accent:#8fc0d8; --accent2:#e0a98c; --chip:#263640;
+  --trunk:#a9876a; --leaf1:#6f9f6f; --leaf2:#4f8058; --leaf3:#8fc293; --ginkgo:#cfa640; --ground:#2b2825; --flower:#e0908e; --pistil:#e8c765;
+  --shadow:0 6px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;line-height:1.85;transition:background .4s,color .4s}
+a{color:inherit}
+.topbar{position:fixed;top:12px;left:14px;right:14px;z-index:15;display:flex;justify-content:space-between;pointer-events:none}
+.topbar>*{pointer-events:auto}
+.pill{height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);
+  font:inherit;font-size:14px;text-decoration:none;display:flex;align-items:center;box-shadow:var(--shadow);cursor:pointer}
+.icon-btn{width:40px;padding:0;justify-content:center;font-size:18px}
+
+.hero{text-align:center;padding:78px 18px 6px}
+.hero h1{font-family:"Noto Serif TC",serif;font-size:clamp(30px,8vw,44px);margin:0;letter-spacing:6px;animation:rise .9s both}
+.hero p{color:var(--soft);margin:6px 0 0;letter-spacing:1px;animation:rise .9s .2s both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+
+.stage{max-width:900px;margin:0 auto;padding:0 18px}
+.treebox{position:sticky;top:0;height:48vh;padding-top:58px;z-index:5;
+  background:linear-gradient(var(--bg) 90%,transparent);transition:background .4s}
+.treebox svg{width:100%;height:100%;display:block}
+.yr{font-family:"Noto Serif TC",serif;font-weight:700;fill:var(--soft);opacity:.28;font-size:34px;letter-spacing:2px}
+.treebox{position:sticky}
+.legend{position:absolute;left:0;right:0;bottom:4px;display:flex;justify-content:center;gap:6px;flex-wrap:wrap;pointer-events:none}
+.legend span{display:flex;align-items:center;gap:3px;font-size:11px;color:var(--soft);background:var(--card);border:1px solid var(--line);
+  border-radius:999px;padding:1px 8px 1px 5px}
+.legend svg{width:16px;height:12px}
+#peek{position:absolute;left:50%;bottom:34px;transform:translateX(-50%) translateY(8px);opacity:0;pointer-events:none;transition:all .25s;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:8px 14px;min-width:200px;max-width:88%;
+  text-decoration:none;color:var(--ink);text-align:center;z-index:3}
+#peek.show{opacity:1;transform:translateX(-50%);pointer-events:auto}
+#peek small{color:var(--accent);font-size:12px}
+#peek b{display:block;font-family:"Noto Serif TC",serif;font-weight:600;font-size:15px;line-height:1.5}
+#peek i{font-style:normal;font-size:12px;color:var(--accent)}
+.hint{text-align:center;color:var(--soft);font-size:13px;margin:-4px 0 10px;transition:opacity .4s}
+
+.events{position:relative;padding:10vh 0 55vh}
+.ev{position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin:0 0 18vh;
+  box-shadow:var(--shadow);opacity:.35;transform:scale(.97);transition:opacity .5s,transform .5s}
+.ev.on{opacity:1;transform:none}
+.ev .y{display:inline-block;color:var(--accent);background:var(--chip);border-radius:999px;padding:1px 12px;font-size:13px;letter-spacing:1px}
+.ev h2{font-family:"Noto Serif TC",serif;font-size:21px;font-weight:600;margin:8px 0 4px;line-height:1.5}
+.ev p{margin:0;color:var(--soft);white-space:pre-wrap}
+.ev .go{display:inline-block;margin-top:10px;color:var(--accent);font-size:14px;text-decoration:none;border-bottom:1px solid currentColor}
+.ev:last-child{margin-bottom:0}
+.end{text-align:center;padding:0 18px 70px;color:var(--soft)}
+.end b{display:block;font-family:"Noto Serif TC",serif;color:var(--ink);font-size:20px;font-weight:600;margin-bottom:4px}
+
+@media (min-width:820px){
+  .stage{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+  .treebox{height:100vh;padding-top:0;background:none;display:flex;align-items:center}
+  .legend{bottom:8vh}
+  #peek{bottom:calc(8vh + 34px)}
+  .treebox svg{height:80vh}
+  .hint{display:none}
+  .events{padding:30vh 0 50vh}
+  .ev{margin-bottom:40vh}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.ev{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="pill" href="./">← 回首頁</a>
+  <button class="pill icon-btn" id="themeBtn" aria-label="切換深淺色">🌙</button>
+</div>
+
+<section class="hero">
+  <h1>我的故事</h1>
+  <p>從一顆種子，慢慢長成一棵樹</p>
+</section>
+
+<div class="stage">
+  <div class="treebox">
+    <svg id="tree" viewBox="0 0 300 320" preserveAspectRatio="xMidYMax meet" aria-hidden="true"></svg>
+    <div class="legend" id="legend"></div>
+    <a id="peek" href="#"><small></small><b></b><i>讀這篇 →</i></a>
+  </div>
+  <div>
+    <div class="hint" id="hint">往下滑，看樹慢慢長大，點葉子可以讀文章 ↓</div>
+    <div class="events" id="events"></div>
+  </div>
+</div>
+
+<div class="end">
+  <b>故事還在繼續長</b>
+  謝謝妳陪我走到這裡 🌿
+</div>
+
+<script>
+/* =================================================
+   故事內容（由舊到新排列）
+   year：時間　title：標題　text：內容（可留空）
+   post：要連結的文章代號（可留空）
+   ================================================= */
+const events=[
+  {year:"2002",title:"範例：一顆種子落地",text:"這裡寫故事的開頭。",post:""},
+  {year:"2005",title:"範例：第一次上幼稚園",text:"",post:""},
+  {year:"2008",title:"範例：開始上小學",text:"小樹冒出第一片葉子。",post:""},
+  {year:"2014",title:"範例：國中",text:"",post:""},
+  {year:"2017",title:"範例：高中",text:"",post:""},
+  {year:"2020",title:"範例：去花蓮讀大學",text:"第一次離家，遇見了海。",post:"ex1"},
+  {year:"2022",title:"範例：大學裡難忘的一年",text:"",post:""},
+  {year:"2024",title:"範例：成為研究生",text:"",post:""},
+  {year:"2025",title:"範例：開始在補習班教書",text:"",post:""},
+  {year:"2026",title:"範例：開始寫這個網站",text:"把心裡的話，一片一片種下來。",post:"ex2"}
+];
+
+/* ---------- 以下不用改 ---------- */
+const $=id=>document.getElementById(id);
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+function setTheme(t){document.documentElement.dataset.theme=t;$("themeBtn").textContent=t==="dark"?"☀️":"🌙";store("theme",t)}
+setTheme(store("theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("themeBtn").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+
+/* 卡片 */
+const box=$("events");
+events.forEach(e=>{
+  const d=document.createElement("article");d.className="ev";
+  d.innerHTML='<span class="y"></span><h2></h2><p></p>';
+  d.querySelector(".y").textContent=e.year;
+  d.querySelector("h2").textContent=e.title;
+  const p=d.querySelector("p");if(e.text)p.textContent=e.text;else p.remove();
+  if(e.post){const a=document.createElement("a");a.className="go";a.href="./#p"+encodeURIComponent(e.post);a.textContent="讀這篇文章 →";d.appendChild(a)}
+  box.appendChild(d);
+});
+const cards=[...box.children];
+const N=events.length;
+
+/* 樹 */
+const NS="http://www.w3.org/2000/svg";
+const svg=$("tree");
+function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);(parent||svg).appendChild(e);return e}
+let seed=11;const rnd=()=>(seed=seed*16807%2147483647)/2147483647;
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const back=t=>{const c=1.6;t=clamp(t);return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2)};
+const f1=n=>n.toFixed(1);
+
+const GROUND=292,CX=150,TR=226;
+const cx=y=>CX+4*Math.sin((GROUND-y)/55);
+const trunkPt=f=>{const y=GROUND-14-TR*f;return [cx(y),y]};
+const quad=(b,t)=>{const u=1-t;return [u*u*b.P0[0]+2*u*t*b.C[0]+t*t*b.P2[0],u*u*b.P0[1]+2*u*t*b.C[1]+t*t*b.P2[1]]};
+
+/* 樹的骨架 */
+const B=[];
+function addBranch(P0,side,deg,L,t0,t1,w,ts){
+  const a=deg*Math.PI/180,dx=side*Math.sin(a),dy=-Math.cos(a);
+  const b={P0,P2:[P0[0]+dx*L,P0[1]+dy*L],C:[P0[0]+dx*L*.6,P0[1]+dy*L*.25],t0,t1,w,ts,side,deg,dir:Math.atan2(dy,dx)*180/Math.PI};
+  B.push(b);return b;
+}
+B.push({P0:trunkPt(0),C:trunkPt(.5),P2:trunkPt(1),t0:0,t1:1,w:0,ts:[.04,.08,.12,.16,.2],side:1,deg:0,dir:-90,isTrunk:true});
+const MAINS=9;
+for(let i=0;i<MAINS;i++){
+  const u=i/(MAINS-1),f=.24+.69*u,side=i%2?1:-1,deg=66-32*u,L=86-60*u,t1=Math.min(1,f+.2),w=2+4.5*(1-f);
+  const m=addBranch(trunkPt(f),side,deg,L,f,t1,w,[.2,.32,.44,.56,.68,.8,.9,1]);
+  [[.4,-30,.48],[.72,-52,.36]].forEach(([t,dd,lr])=>{
+    const st=f+(t1-f)*t;addBranch(quad(m,t),side,Math.max(8,deg+dd),L*lr,st,Math.min(1,st+.14),w*.5,[.35,.6,.8,1]);
+  });
+}
+addBranch(trunkPt(.97),-1,32,24,.94,1,1.4,[.5,1]);
+addBranch(trunkPt(.97),1,26,22,.94,1,1.4,[.5,1]);
+
+/* 葉子可以長的位置 */
+let cand=[];
+B.forEach(b=>b.ts.forEach(t=>{
+  const [x,y]=quad(b,t),sd=rnd()<.5?-1:1;
+  const off=(rnd()-.5)*5;cand.push({b,t,x:x+off,y:y+off*.6,tau:b.t0+(b.t1-b.t0)*t,ang:b.dir+sd*(30+rnd()*45)});
+}));
+
+/* 四種分類的樣子 */
+const KIND={
+  "小牢騷":{d:"M0 0C2-4 8-4.8 10.5 0C8 4.8 2 4 0 0Z",fills:["var(--leaf1)","var(--leaf2)"],size:.95},
+  "詩":{d:"M0 0C4-2.4 11-2.8 17 0C11 2.8 4 2.4 0 0Z",fills:["var(--leaf3)"],size:1},
+  "歌":{d:"M0 0L8.5-6.5Q14.5 0 8.5 6.5Z",fills:["var(--ginkgo)"],size:1.05},
+  "年度報告":{flower:true,size:1.9}
+};
+const ORDER=["年度報告","詩","歌","小牢騷"];
+function shape(kind,parent,k){
+  const K=KIND[kind]||KIND["小牢騷"];
+  if(K.flower){
+    for(let i=0;i<5;i++)el("ellipse",{cx:3.6,cy:0,rx:3.4,ry:2.4,fill:"var(--flower)",transform:`rotate(${i*72})`},parent);
+    el("circle",{r:1.9,fill:"var(--pistil)"},parent);
+  }else{
+    el("path",{d:K.d,fill:K.fills[k%K.fills.length]},parent);
+  }
+}
+
+/* 圖例 */
+function legendIcon(kind){
+  const s=document.createElementNS(NS,"svg");s.setAttribute("viewBox",kind==="年度報告"?"-8 -6 16 12":"-1 -6 18 12");shape(kind,s,1);return s;
+}
+
+/* 背景 */
+const yearTxt=el("text",{x:14,y:40,class:"yr"});
+el("path",{d:"M0 320 L0 300 Q75 284 150 288 Q225 284 300 300 L300 320Z",fill:"var(--ground)"});
+const seedEl=el("ellipse",{cx:CX,cy:GROUND-2,rx:5,ry:3.5,fill:"var(--trunk)"});
+const branchG=el("g",{fill:"none",stroke:"var(--trunk)","stroke-linecap":"round","stroke-linejoin":"round"});
+B.forEach(b=>{if(!b.isTrunk)b.el=el("path",{},branchG)});
+const trunk=el("path",{fill:"var(--trunk)"});
+const leafG=el("g",{});
+
+let items=[],LS=1;
+function plant(list){
+  /* 由舊到新，一篇文章一片葉子 */
+  items=list.map((p,i)=>({...p,_i:i})).sort((a,b)=>String(a.date).localeCompare(String(b.date))||b._i-a._i);
+  const P=items.length;if(!P)return;
+  while(cand.length<P){
+    const extra=cand.slice(0,P-cand.length).map(c=>({...c,x:c.x+(rnd()-.5)*12,y:c.y+(rnd()-.5)*10,ang:c.ang+150+rnd()*60}));
+    cand=cand.concat(extra);
+  }
+  const used=new Set();
+  LS=clamp(2.6/Math.sqrt(P/8),1.4,2.4);
+  items.forEach((it,k)=>{
+    it.at=.5+(P>1?k/(P-1):0)*(N-1.1);   /* 從第一張卡片開始，平均分配到最後一張 */
+    const sk=it.at/N,flower=it.category==="年度報告";
+    let best=-1,score=-1;
+    cand.forEach((c,i)=>{
+      if(used.has(i)||c.tau>sk)return;
+      const sc=c.tau+(flower&&!c.b.isTrunk&&c.t>=.8?1:0);   /* 花優先開在枝頭 */
+      if(sc>score){score=sc;best=i}
+    });
+    if(best<0)best=cand.findIndex((c,i)=>!used.has(i));
+    used.add(best);it.slot=cand[best];
+    it.g=el("g",{style:"cursor:pointer"},leafG);
+    el("circle",{cx:flower?0:6,cy:0,r:flower?8:7,fill:"transparent"},it.g);
+    shape(it.category,it.g,k);
+    it.g.addEventListener("click",()=>peek(it));
+  });
+  /* 年度報告的花畫在最上層 */
+  items.filter(it=>it.category==="年度報告").forEach(it=>leafG.appendChild(it.g));
+  const lg=$("legend");lg.innerHTML="";
+  ORDER.forEach(kind=>{const n=items.filter(it=>it.category===kind).length;if(!n)return;
+    const sp=document.createElement("span");sp.appendChild(legendIcon(kind));sp.appendChild(document.createTextNode(kind+" "+n));lg.appendChild(sp)});
+  measure();
+}
+
+let peekT=0;
+function peek(it){
+  const pk=$("peek");pk.href="./#p"+encodeURIComponent(it.id);
+  pk.querySelector("small").textContent=it.category+"・"+it.date;
+  pk.querySelector("b").textContent=it.title;
+  pk.classList.add("show");clearTimeout(peekT);peekT=setTimeout(()=>pk.classList.remove("show"),4500);
+}
+
+function draw(p){
+  const s=clamp(p/N);
+  const yt=GROUND-14-TR*Math.max(s,.02),base=2+15*s,pts=[];
+  for(let k=0;k<=14;k++){const t=k/14,y=GROUND+(yt-GROUND)*t,hw=(base/2)*(1-t)+.8*t;pts.push([cx(y),y,hw])}
+  trunk.setAttribute("d","M"+pts.map(([x,y,w])=>f1(x-w)+" "+f1(y)).join("L")+"L"+pts.reverse().map(([x,y,w])=>f1(x+w)+" "+f1(y)).join("L")+"Z");
+  seedEl.setAttribute("opacity",clamp(1-p*6));
+  B.forEach(b=>{
+    b.g=b.isTrunk?s:clamp((s-b.t0)/(b.t1-b.t0));
+    if(b.isTrunk)return;
+    if(b.g<=0){b.el.setAttribute("d","");return}
+    const q=[];for(let k=0;k<=10;k++)q.push(quad(b,b.g*k/10));
+    b.el.setAttribute("d","M"+q.map(([x,y])=>f1(x)+" "+f1(y)).join("L"));
+    b.el.setAttribute("stroke-width",(b.w*(.5+.5*s)).toFixed(2));
+  });
+  items.forEach(it=>{
+    const c=it.slot,reach=c.b.isTrunk?1:clamp((c.b.g-c.t+.05)*8);
+    const sc=back((p-it.at+.35)/.35)*reach*LS*(KIND[it.category]||KIND["小牢騷"]).size;
+    it.g.setAttribute("transform",`translate(${f1(c.x)} ${f1(c.y)}) rotate(${f1(c.ang)}) scale(${Math.max(0,sc).toFixed(3)})`);
+    it.g.style.pointerEvents=sc>.3?"auto":"none";
+  });
+  const active=clamp(Math.floor(p),0,N-1);
+  yearTxt.textContent=p<.15?"":events[active].year;
+}
+
+fetch("posts.json?t="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.json():[]).then(d=>plant(Array.isArray(d)?d:[])).catch(()=>{});
+
+/* 捲動 → 成長進度 */
+let target=0,shown=0,raf=0;
+const still=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function measure(){
+  const mid=innerHeight*(innerWidth>=820?.55:.72);let p=0;
+  cards.forEach((c,i)=>{const r=c.getBoundingClientRect();const f=clamp((mid-r.top)/(r.height+innerHeight*.18));p+=f;c.classList.toggle("on",f>0&&f<1||(i===N-1&&f>=1))});
+  target=p;$("hint").style.opacity=p>.2?0:1;
+  if(!raf)raf=requestAnimationFrame(tick);
+}
+function tick(){
+  shown=still?target:shown+(target-shown)*.12;
+  draw(shown);
+  raf=Math.abs(target-shown)>.002?requestAnimationFrame(tick):0;
+}
+addEventListener("scroll",measure,{passive:true});
+addEventListener("resize",measure);
+measure();
+</script>
+</body>
+</html>
