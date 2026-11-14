@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="寫文章">
+<meta name="theme-color" content="#f5f1ea">
+<title>寫文章｜怡穎的小角落</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f1ea; --card:#fffdf8; --ink:#2b2622; --soft:#7a7068; --line:#e7dfd4;
+  --accent:#3d6e8a; --accent2:#c98a6b; --chip:#e4edf2; --danger:#b5524a;
+  --shadow:0 6px 24px rgba(60,45,30,.08);
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#171615; --card:#22201e; --ink:#ede6dd; --soft:#a39a90; --line:#36322e;
+  --accent:#8fc0d8; --accent2:#e0a98c; --chip:#263640; --danger:#e08a80;
+  --shadow:0 6px 24px rgba(0,0,0,.35);
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;line-height:1.7;
+  padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.wrap{max-width:680px;margin:0 auto;padding:22px 16px 80px}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+header h1{font-family:"Noto Serif TC",serif;font-size:24px;margin:0;letter-spacing:2px}
+header a{color:var(--accent);font-size:14px;text-decoration:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow);margin-bottom:18px}
+.card h2{font-family:"Noto Serif TC",serif;font-size:18px;margin:0 0 12px}
+label{display:block;font-size:13px;color:var(--soft);margin:14px 0 6px}
+label:first-of-type{margin-top:0}
+input,select,textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);
+  border-radius:12px;padding:11px 14px;outline:none;-webkit-appearance:none;appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+textarea{min-height:46vh;resize:vertical;font-family:"Noto Serif TC",serif;line-height:2}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cats{display:flex;gap:8px;flex-wrap:wrap}
+.cats button{flex:1;min-width:70px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:9px 6px;border-radius:999px;
+  font:inherit;font-size:14px;cursor:pointer}
+.cats button.on{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.btn{display:block;width:100%;border:none;border-radius:12px;padding:14px;font:inherit;font-size:16px;font-weight:500;cursor:pointer;
+  background:var(--accent);color:var(--bg);margin-top:16px}
+.btn:disabled{opacity:.5}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--soft);margin-top:10px;padding:11px}
+.hint{font-size:12px;color:var(--soft);margin-top:6px;display:flex;justify-content:space-between}
+.editing{display:none;background:var(--chip);color:var(--accent);border-radius:10px;padding:8px 12px;font-size:14px;margin-bottom:12px;
+  align-items:center;justify-content:space-between}
+.editing.show{display:flex}
+.editing button{background:none;border:none;color:var(--accent);font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);opacity:0;
+  background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:14px;transition:all .3s;z-index:9;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%)}
+.item{display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+.item:first-child{border-top:none}
+.item .t{flex:1;min-width:0}
+.item .t b{display:block;font-family:"Noto Serif TC",serif;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .t span{font-size:12px;color:var(--soft)}
+.item button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:5px 10px;font:inherit;font-size:13px;cursor:pointer}
+.item button.del{color:var(--danger)}
+.empty{color:var(--soft);text-align:center;padding:16px 0;font-size:14px}
+#setup p{font-size:14px;color:var(--soft);margin:0 0 4px}
+.foot{text-align:center;margin-top:10px}
+.foot button{background:none;border:none;color:var(--soft);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>寫文章</h1>
+    <a href="./" target="_blank">看網站 →</a>
+  </header>
+
+  <!-- 第一次使用：貼上金鑰 -->
+  <div class="card" id="setup" hidden>
+    <h2>第一次使用</h2>
+    <p>請貼上妳在 GitHub 申請的金鑰（github_pat_ 開頭）。只需要貼一次，會存在這支手機的瀏覽器裡。</p>
+    <label for="tokenIn">金鑰</label>
+    <input id="tokenIn" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="github_pat_...">
+    <button class="btn" id="saveToken">儲存並開始</button>
+  </div>
+
+  <div id="app" hidden>
+    <div class="card">
+      <div class="editing" id="editing"><span id="editingText">正在修改</span><button id="cancelEdit">取消修改</button></div>
+      <label for="title">標題</label>
+      <input id="title" placeholder="今天想寫什麼？">
+      <label>分類</label>
+      <div class="cats" id="cats"></div>
+      <label for="date">日期</label>
+      <input id="date" type="date">
+      <label for="content">內容</label>
+      <textarea id="content" placeholder="直接按 Enter 換行就好"></textarea>
+      <div class="hint"><span id="draftNote">草稿會自動保存</span><span id="wc">0 字</span></div>
+      <button class="btn" id="publish">發佈</button>
+      <button class="btn ghost" id="clearForm">清空重寫</button>
+    </div>
+
+    <div class="card">
+      <h2>已發佈的文章</h2>
+      <div id="list"><div class="empty">載入中…</div></div>
+    </div>
+
+    <div class="foot"><button id="logout">清除這支手機上的金鑰</button></div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+/* ===== 網站設定（通常不用改）===== */
+const OWNER="yeeeee623";
+const REPO="yeeeee623.github.io";
+const BRANCH="main";
+const FILE="posts.json";
+const CATS=["年度報告","詩","歌","小牢騷"];
+/* ================================== */
+
+const API=`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE}`;
+const $=id=>document.getElementById(id);
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){return null}}
+
+let token=store("gh_token")||"";
+let posts=[];
+let editId=null;
+let cat=CATS[0];
+let busy=false;
+
+function toast(msg,ms=2600){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),ms)}
+function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function newId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
+
+/* 中文要先轉成 UTF-8 再編碼 */
+function b64enc(str){const bytes=new TextEncoder().encode(str);let bin="";for(let i=0;i<bytes.length;i+=0x8000)bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+0x8000));return btoa(bin)}
+function b64dec(b64){const bin=atob(b64.replace(/\s/g,""));return new TextDecoder().decode(Uint8Array.from(bin,c=>c.charCodeAt(0)))}
+
+function errMsg(status){
+  if(status===401)return "金鑰錯誤或已過期，請清除後重新貼上";
+  if(status===403)return "金鑰沒有寫入權限，請確認 Contents 設成 Read and write";
+  if(status===404)return "找不到 posts.json，或金鑰沒有選到這個 repo";
+  if(status===409||status===422)return "檔案剛好在別處被改過，請再按一次";
+  return "上傳失敗（錯誤 "+status+"），請檢查網路再試一次";
+}
+function headers(json){const h={Authorization:"Bearer "+token,Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"};if(json)h["Content-Type"]="application/json";return h}
+
+async function load(){
+  const r=await fetch(API+"?ref="+BRANCH,{headers:headers(),cache:"no-store"});
+  if(!r.ok)throw {status:r.status};
+  const j=await r.json();
+  let text;
+  if(j.encoding==="base64"&&j.content)text=b64dec(j.content);
+  else{ /* 檔案很大時改抓原始內容 */
+    const r2=await fetch(API+"?ref="+BRANCH,{headers:{...headers(),Accept:"application/vnd.github.raw+json"},cache:"no-store"});
+    if(!r2.ok)throw {status:r2.status};
+    text=await r2.text();
+  }
+  let data=[];try{data=JSON.parse(text)}catch(e){throw {status:"JSON"}}
+  return {posts:Array.isArray(data)?data:[],sha:j.sha};
+}
+async function save(list,sha,message){
+  const body={message,content:b64enc(JSON.stringify(list,null,2)+"\n"),sha,branch:BRANCH};
+  const r=await fetch(API,{method:"PUT",headers:headers(true),body:JSON.stringify(body)});
+  if(!r.ok)throw {status:r.status};
+}
+
+/* 每次都先抓最新版本再修改，避免蓋掉別的變更 */
+async function commit(change,message,okMsg){
+  if(busy)return false;busy=true;setBusy(true);
+  try{
+    const cur=await load();
+    const next=change(cur.posts.slice());
+    await save(next,cur.sha,message);
+    posts=next;renderList();
+    toast(okMsg+"，網站約 1 分鐘後更新",3200);
+    return true;
+  }catch(e){
+    toast(e&&e.status==="JSON"?"posts.json 格式壞掉了，請找 Claude 幫忙":errMsg(e&&e.status),4000);
+    return false;
+  }finally{busy=false;setBusy(false)}
+}
+function setBusy(b){$("publish").disabled=b;$("publish").textContent=b?"上傳中…":(editId?"儲存修改":"發佈")}
+
+/* ----- 表單 ----- */
+function renderCats(){
+  $("cats").innerHTML="";
+  CATS.forEach(c=>{const b=document.createElement("button");b.type="button";b.textContent=c;if(c===cat)b.className="on";
+    b.onclick=()=>{cat=c;renderCats();saveDraft()};$("cats").appendChild(b)});
+}
+function fillForm(p){
+  $("title").value=p.title||"";cat=CATS.includes(p.category)?p.category:CATS[0];
+  $("date").value=p.date||today();$("content").value=p.content||"";renderCats();updateWc();
+}
+function setEditing(p){
+  editId=p?p.id:null;
+  $("editing").classList.toggle("show",!!p);
+  if(p)$("editingText").textContent="正在修改：「"+p.title+"」";
+  setBusy(false);
+}
+function updateWc(){$("wc").textContent=$("content").value.replace(/\s/g,"").length+" 字"}
+function saveDraft(){
+  store("draft",JSON.stringify({editId,title:$("title").value,category:cat,date:$("date").value,content:$("content").value}));
+  $("draftNote").textContent="草稿已保存";
+}
+function clearDraft(){store("draft",null);$("draftNote").textContent="草稿會自動保存"}
+function resetForm(){setEditing(null);fillForm({date:today()});clearDraft()}
+
+["title","date","content"].forEach(id=>$(id).addEventListener("input",()=>{if(id==="content")updateWc();saveDraft()}));
+
+$("publish").onclick=async()=>{
+  const title=$("title").value.trim(),content=$("content").value.replace(/\s+$/,""),date=$("date").value||today();
+  if(!title){toast("記得寫標題喔");$("title").focus();return}
+  if(!content.trim()){toast("內容還是空的");$("content").focus();return}
+  if(editId){
+    const id=editId;
+    const ok=await commit(list=>{const i=list.findIndex(p=>p.id===id);const np={id,title,category:cat,date,content};
+      if(i>=0)list[i]=np;else list.unshift(np);return list},"修改文章："+title,"已儲存修改");
+    if(ok)resetForm();
+  }else{
+    const ok=await commit(list=>{list.unshift({id:newId(),title,category:cat,date,content});return list},"新增文章："+title,"發佈成功");
+    if(ok)resetForm();
+  }
+};
+$("clearForm").onclick=()=>{if(($("title").value||$("content").value)&&!confirm("確定要清空嗎？目前寫的內容會不見"))return;resetForm()};
+$("cancelEdit").onclick=()=>resetForm();
+
+/* ----- 文章列表 ----- */
+function renderList(){
+  const L=$("list");L.innerHTML="";
+  const items=posts.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  if(!items.length){L.innerHTML='<div class="empty">還沒有文章</div>';return}
+  items.forEach(p=>{
+    const d=document.createElement("div");d.className="item";
+    d.innerHTML='<div class="t"><b></b><span></span></div><button>修改</button><button class="del">刪除</button>';
+    d.querySelector("b").textContent=p.title;
+    d.querySelector("span").textContent=p.category+"・"+p.date;
+    const [eb,db]=d.querySelectorAll("button");
+    eb.onclick=()=>{
+      if(($("title").value||$("content").value)&&!editId&&!confirm("目前的草稿會被取代，要繼續嗎？"))return;
+      setEditing(p);fillForm(p);saveDraft();scrollTo({top:0,behavior:"smooth"});
+    };
+    db.onclick=async()=>{
+      if(!confirm("確定要刪除「"+p.title+"」嗎？"))return;
+      await commit(list=>list.filter(x=>x.id!==p.id),"刪除文章："+p.title,"已刪除");
+      if(editId===p.id)resetForm();
+    };
+    L.appendChild(d);
+  });
+}
+
+/* ----- 啟動 ----- */
+async function start(){
+  $("setup").hidden=true;$("app").hidden=false;
+  let d=null;try{d=JSON.parse(store("draft")||"null")}catch(e){}
+  if(d){fillForm(d);cat=CATS.includes(d.category)?d.category:CATS[0];renderCats();if(d.editId)setEditing({id:d.editId,title:d.title});$("draftNote").textContent="已載入上次的草稿"}
+  else fillForm({date:today()});
+  try{const r=await load();posts=r.posts;renderList()}
+  catch(e){$("list").innerHTML='<div class="empty"></div>';$("list").firstChild.textContent=e&&e.status==="JSON"?"posts.json 格式壞掉了":errMsg(e&&e.status)}
+}
+$("saveToken").onclick=()=>{
+  const v=$("tokenIn").value.trim();
+  if(!v){toast("請先貼上金鑰");return}
+  token=v;store("gh_token",v);start();
+};
+$("logout").onclick=()=>{if(!confirm("清除後要重新貼上金鑰才能發文，確定嗎？"))return;store("gh_token",null);token="";location.reload()};
+
+renderCats();
+if(token)start();else $("setup").hidden=false;
+</script>
+</body>
+</html>

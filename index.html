@@ -129,54 +129,9 @@ footer{text-align:center;color:var(--soft);font-size:13px;margin-top:46px}
 </article>
 
 <script>
-/* =================================================
-   在這裡新增文章！
-   複製一整段 { ... }, 貼在最上面，改成妳的內容。
-   category 只能填：年度報告、詩、歌、小牢騷
-   內容放在兩個 ` 符號中間，直接按 Enter 換行就好
-   ================================================= */
-const posts = [
-  {
-    title: "範例：海邊的早晨",
-    category: "詩",
-    date: "2026-11-14",
-    content: `這是一首範例詩
-之後換成妳寫的
-
-浪一波一波
-把昨天帶走`
-  },
-  {
-    title: "範例：我的 2026 年度報告",
-    category: "年度報告",
-    date: "2026-11-13",
-    content: `這是年度報告的範例。
-
-今年發生了很多事，
-之後把妳的年度回顧寫在這裡。`
-  },
-  {
-    title: "範例：一首歌",
-    category: "歌",
-    date: "2026-11-12",
-    content: `【主歌】
-這裡放妳寫的歌詞
-
-【副歌】
-這裡放副歌`
-  },
-  {
-    title: "範例：今天的小牢騷",
-    category: "小牢騷",
-    date: "2026-11-11",
-    content: `今天有點煩，
-寫下來就好多了。`
-  }
-];
-
-/* ---------- 以下不用改 ---------- */
+/* 文章都存在 posts.json，請用 write.html 後台新增或修改 */
 const cats=["全部","年度報告","詩","歌","小牢騷"];
-const sorted=posts.map((p,i)=>({...p,id:i})).sort((a,b)=>b.date.localeCompare(a.date));
+let posts=[],sorted=[];
 let cur="全部", q="";
 const $=id=>document.getElementById(id);
 
@@ -185,7 +140,6 @@ function setTheme(t){document.documentElement.dataset.theme=t;$("themeBtn").text
 setTheme(store("theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
 $("themeBtn").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
 
-$("count").textContent=`共 ${posts.length} 篇文章`;
 function renderNav(){
   $("nav").innerHTML="";
   cats.forEach(c=>{
@@ -203,7 +157,7 @@ function renderList(){
   const items=sorted.filter(p=>(cur==="全部"||p.category===cur)&&(p.title+p.content).toLowerCase().includes(q));
   if(!items.length){L.innerHTML='<div class="empty">找不到文章，換個關鍵字試試看</div>';return}
   items.forEach((p,k)=>{
-    const a=document.createElement("a");a.className="card";a.href="#p"+p.id;
+    const a=document.createElement("a");a.className="card";a.href="#p"+encodeURIComponent(p.id);
     a.innerHTML=`<div class="meta"><span class="tag"></span><span></span></div><h2></h2><p class="ex"></p>`;
     a.querySelector(".tag").textContent=p.category;
     a.querySelector(".meta span:last-child").textContent=p.date;
@@ -216,14 +170,14 @@ function renderList(){
 $("search").oninput=e=>{q=e.target.value.trim().toLowerCase();renderList()};
 
 function showPost(id){
-  const i=sorted.findIndex(p=>p.id===id); if(i<0){location.hash="";return}
+  const i=sorted.findIndex(p=>String(p.id)===id); if(i<0){location.hash="";return}
   const p=sorted[i];
   $("pTag").textContent=p.category;$("pDate").textContent=p.date;
   $("pRead").textContent="約 "+Math.max(1,Math.round(p.content.length/300))+" 分鐘";
   $("pTitle").textContent=p.title;$("pBody").textContent=p.content;
   $("post").classList.toggle("poem",p.category==="詩");
   const prev=sorted[i+1],next=sorted[i-1];
-  $("pn").innerHTML=(prev?`<a href="#p${prev.id}">← 上一篇<b></b></a>`:"<span></span>")+(next?`<a class="next" href="#p${next.id}">下一篇 →<b></b></a>`:"");
+  $("pn").innerHTML=(prev?`<a href="#p${encodeURIComponent(prev.id)}">← 上一篇<b></b></a>`:"<span></span>")+(next?`<a class="next" href="#p${encodeURIComponent(next.id)}">下一篇 →<b></b></a>`:"");
   const bs=$("pn").querySelectorAll("b");let j=0;
   if(prev)bs[j++].textContent=prev.title; if(next)bs[j].textContent=next.title;
   document.title=p.title+"｜怡穎的小角落";
@@ -231,11 +185,10 @@ function showPost(id){
   scrollTo(0,0);
 }
 function route(){
-  const m=location.hash.match(/^#p(\d+)$/);
-  if(m)showPost(+m[1]);
+  const m=location.hash.match(/^#p(.+)$/);
+  if(m)showPost(decodeURIComponent(m[1]));
   else{$("post").classList.remove("show");$("home").style.display="block";document.title="怡穎的小角落";$("progress").style.width=0}
 }
-addEventListener("hashchange",route);
 addEventListener("scroll",()=>{
   if(!$("post").classList.contains("show"))return;
   const h=document.documentElement;$("progress").style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight||1)*100)+"%";
@@ -247,7 +200,19 @@ function share(){
   const u=location.href;
   (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>{$("shareBtn").textContent="已複製！";setTimeout(()=>$("shareBtn").textContent="複製連結",1500)}).catch(()=>prompt("複製這個連結：",u));
 }
-renderNav();renderList();route();
+
+$("count").textContent="載入中…";
+$("list").innerHTML='<div class="empty">文章載入中…</div>';
+fetch("posts.json?t="+Date.now(),{cache:"no-store"})
+  .then(r=>{if(!r.ok)throw new Error(r.status);return r.json()})
+  .then(d=>{
+    posts=Array.isArray(d)?d:[];
+    sorted=posts.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+    $("count").textContent=`共 ${posts.length} 篇文章`;
+    renderNav();renderList();route();
+    addEventListener("hashchange",route);
+  })
+  .catch(()=>{$("count").textContent="";$("list").innerHTML='<div class="empty">文章載入失敗，請重新整理看看</div>'});
 </script>
 </body>
 </html>
