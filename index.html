@@ -1,12 +1,166 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>怡穎的小網站</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>怡穎的小角落</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f3ee; --card:#fffdf9; --ink:#2f2a26; --soft:#7b726a;
+    --line:#e6dfd6; --accent:#3f6f8a; --accent-soft:#e3edf2;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#1c1b1a; --card:#262422; --ink:#ece6df; --soft:#a69d94;
+      --line:#3a3633; --accent:#8fbcd4; --accent-soft:#2b3a42; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Noto Sans TC",system-ui,sans-serif;line-height:1.8}
+  .wrap{max-width:720px;margin:0 auto;padding:0 18px 60px}
+  header{padding:48px 0 20px;text-align:center}
+  header h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:30px;margin:0 0 6px;letter-spacing:2px}
+  header p{margin:0;color:var(--soft);font-size:15px}
+  nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:20px 0 28px}
+  nav button{border:1px solid var(--line);background:var(--card);color:var(--ink);
+    padding:7px 16px;border-radius:999px;font-size:15px;cursor:pointer;font-family:inherit}
+  nav button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .list{display:flex;flex-direction:column;gap:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px 20px;cursor:pointer;transition:transform .15s}
+  .card:hover{transform:translateY(-2px)}
+  .tag{display:inline-block;font-size:12px;color:var(--accent);background:var(--accent-soft);
+    padding:2px 10px;border-radius:999px;margin-right:8px}
+  .date{font-size:13px;color:var(--soft)}
+  .card h2{font-family:"Noto Serif TC",serif;font-size:20px;margin:8px 0 4px;font-weight:600}
+  .card .ex{color:var(--soft);font-size:15px;margin:0;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  article{display:none}
+  article.show{display:block}
+  .back{background:none;border:none;color:var(--accent);font-size:15px;padding:0;margin-bottom:18px;cursor:pointer;font-family:inherit}
+  article h2{font-family:"Noto Serif TC",serif;font-size:26px;margin:10px 0 18px;font-weight:600}
+  .body{font-family:"Noto Serif TC",serif;font-size:17px;white-space:pre-wrap}
+  .empty{text-align:center;color:var(--soft);padding:40px 0}
+  footer{text-align:center;color:var(--soft);font-size:13px;margin-top:50px}
+</style>
 </head>
 <body>
-  <h1>嗨，我是怡穎</h1>
-  <p>這是我的第一個網站。</p>
+<div class="wrap">
+  <header>
+    <h1>怡穎的小角落</h1>
+    <p>寫給自己，也寫給路過的你</p>
+  </header>
+
+  <div id="home">
+    <nav id="nav"></nav>
+    <div class="list" id="list"></div>
+  </div>
+
+  <article id="post">
+    <button class="back" onclick="goHome()">← 回到文章列表</button>
+    <div><span class="tag" id="pTag"></span><span class="date" id="pDate"></span></div>
+    <h2 id="pTitle"></h2>
+    <div class="body" id="pBody"></div>
+  </article>
+
+  <footer>© 怡穎</footer>
+</div>
+
+<script>
+/* ===========================================
+   在這裡新增文章！
+   複製一整段 { ... }, 貼在最上面，改成妳的內容就好。
+   category 只能填：年度報告、詩、歌、小牢騷
+   換行直接按 Enter 就可以（內容放在兩個 ` 符號中間）
+   =========================================== */
+const posts = [
+  {
+    title: "範例：海邊的早晨",
+    category: "詩",
+    date: "2026-11-14",
+    content: `這是一首範例詩
+之後換成妳寫的
+
+浪一波一波
+把昨天帶走`
+  },
+  {
+    title: "範例：我的 2026 年度報告",
+    category: "年度報告",
+    date: "2026-11-14",
+    content: `這是年度報告的範例。
+
+今年發生了很多事，
+之後把妳的年度回顧寫在這裡。`
+  },
+  {
+    title: "範例：一首歌",
+    category: "歌",
+    date: "2026-11-14",
+    content: `主歌
+這裡放妳寫的歌詞
+
+副歌
+這裡放副歌`
+  },
+  {
+    title: "範例：今天的小牢騷",
+    category: "小牢騷",
+    date: "2026-11-14",
+    content: `今天有點煩，
+寫下來就好多了。`
+  }
+];
+
+const cats = ["全部","年度報告","詩","歌","小牢騷"];
+let current = "全部";
+
+function renderNav(){
+  const nav = document.getElementById("nav");
+  nav.innerHTML = "";
+  cats.forEach(c=>{
+    const b = document.createElement("button");
+    b.textContent = c;
+    if(c===current) b.className="on";
+    b.onclick = ()=>{ current=c; renderNav(); renderList(); };
+    nav.appendChild(b);
+  });
+}
+function renderList(){
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+  const items = posts
+    .map((p,i)=>({...p,i}))
+    .filter(p=>current==="全部"||p.category===current)
+    .sort((a,b)=>b.date.localeCompare(a.date));
+  if(!items.length){ list.innerHTML='<div class="empty">這裡還沒有文章</div>'; return; }
+  items.forEach(p=>{
+    const d = document.createElement("div");
+    d.className="card";
+    d.innerHTML = `<span class="tag">${p.category}</span><span class="date">${p.date}</span>
+      <h2></h2><p class="ex"></p>`;
+    d.querySelector("h2").textContent = p.title;
+    d.querySelector(".ex").textContent = p.content.replace(/\n/g," ");
+    d.onclick = ()=>openPost(p.i);
+    list.appendChild(d);
+  });
+}
+function openPost(i){
+  const p = posts[i];
+  document.getElementById("pTag").textContent = p.category;
+  document.getElementById("pDate").textContent = p.date;
+  document.getElementById("pTitle").textContent = p.title;
+  document.getElementById("pBody").textContent = p.content;
+  document.getElementById("home").style.display="none";
+  document.getElementById("post").classList.add("show");
+  window.scrollTo(0,0);
+}
+function goHome(){
+  document.getElementById("post").classList.remove("show");
+  document.getElementById("home").style.display="block";
+}
+renderNav(); renderList();
+</script>
 </body>
 </html>
