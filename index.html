@@ -3,74 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>怡穎的小角落</title>
-<meta name="description" content="怡穎的文章：年度報告、詩、歌，還有一些小小牢騷。">
+<title>Yeeeee的小角落</title>
+<meta name="description" content="Yeeeee的文章：年度報告、詩、歌，還有一些小小牢騷。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#f5f1ea; --card:#fffdf8; --ink:#2b2622; --soft:#7a7068; --line:#e7dfd4;
-  --accent:#3d6e8a; --accent2:#c98a6b; --chip:#e4edf2; --wave1:#cfe0e8; --wave2:#a9c7d6; --wave3:#7fa9bf;
+  --accent:#3d6e8a; --accent2:#c98a6b; --chip:#e4edf2;
+  --trunk:#8a6a4f; --leaf1:#a9cfa0; --leaf2:#77ad7c; --leaf3:#3f7a55; --ginkgo:#dcb54c; --ground:#e6dccb; --flower:#ec9f9b; --pistil:#f4d67c;
   --shadow:0 6px 24px rgba(60,45,30,.08);
 }
 [data-theme="dark"]{
   --bg:#171615; --card:#22201e; --ink:#ede6dd; --soft:#a39a90; --line:#36322e;
-  --accent:#8fc0d8; --accent2:#e0a98c; --chip:#263640; --wave1:#1f2c33; --wave2:#2a4250; --wave3:#3a5c6e;
+  --accent:#8fc0d8; --accent2:#e0a98c; --chip:#263640;
+  --trunk:#a9876a; --leaf1:#6f9f6f; --leaf2:#4f8058; --leaf3:#8fc293; --ginkgo:#cfa640; --ground:#2b2825; --flower:#e0908e; --pistil:#e8c765;
   --shadow:0 6px 24px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;
-  line-height:1.85;transition:background .4s,color .4s}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;line-height:1.8;transition:background .4s,color .4s}
 a{color:inherit}
-#progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));z-index:20;transition:width .1s}
-.topbar{position:fixed;top:12px;right:14px;z-index:15;display:flex;gap:8px}
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));z-index:40;transition:width .1s}
 .icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);
-  font-size:18px;cursor:pointer;box-shadow:var(--shadow);display:grid;place-items:center}
-/* hero */
-.hero{position:relative;text-align:center;padding:72px 18px 120px;overflow:hidden}
-.hero h1{font-family:"Noto Serif TC",serif;font-weight:700;font-size:clamp(30px,8vw,46px);margin:0;letter-spacing:4px;
-  opacity:0;animation:rise .9s .1s forwards}
-.hero p{color:var(--soft);margin:10px 0 0;font-size:16px;letter-spacing:1px;opacity:0;animation:rise .9s .35s forwards}
-.hero .count{display:inline-block;margin-top:18px;font-size:13px;color:var(--accent);background:var(--chip);
-  padding:4px 14px;border-radius:999px;opacity:0;animation:rise .9s .6s forwards}
-@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-.waves{position:absolute;left:0;bottom:0;width:100%;height:110px}
-.waves use{animation:drift 12s linear infinite}
-.waves use:nth-of-type(1){fill:var(--wave1);animation-duration:16s}
-.waves use:nth-of-type(2){fill:var(--wave2);animation-duration:11s;animation-delay:-3s;opacity:.7}
-.waves use:nth-of-type(3){fill:var(--wave3);animation-duration:8s;animation-delay:-5s;opacity:.45}
-.waves use:nth-of-type(4){fill:var(--bg);animation-duration:20s;animation-delay:-2s}
-@keyframes drift{from{transform:translateX(-90px)}to{transform:translateX(85px)}}
-.wrap{max-width:740px;margin:0 auto;padding:0 18px 70px}
-/* controls */
-.controls{position:sticky;top:0;z-index:10;background:var(--bg);padding:14px 0 12px;margin-bottom:10px;transition:background .4s}
-.search{width:100%;padding:11px 16px 11px 40px;border:1px solid var(--line);border-radius:12px;background:var(--card);
-  color:var(--ink);font-size:15px;font-family:inherit;outline:none;
+  font-size:17px;cursor:pointer;box-shadow:var(--shadow);display:grid;place-items:center;padding:0;flex:none}
+#menuBtn i{display:block;width:17px;height:2px;background:currentColor;border-radius:2px;position:relative}
+#menuBtn i::before,#menuBtn i::after{content:"";position:absolute;left:0;width:17px;height:2px;background:currentColor;border-radius:2px}
+#menuBtn i::before{top:-6px}#menuBtn i::after{top:6px}
+
+/* 側欄 */
+#scrim{position:fixed;inset:0;background:rgba(20,15,10,.35);opacity:0;pointer-events:none;transition:opacity .3s;z-index:30}
+#side{position:fixed;top:0;left:0;bottom:0;width:min(280px,82vw);background:var(--card);border-right:1px solid var(--line);z-index:35;
+  transform:translateX(-102%);transition:transform .35s cubic-bezier(.2,.8,.2,1);padding:20px 16px;overflow-y:auto;box-shadow:var(--shadow)}
+body.menu #side{transform:none}
+body.menu #scrim{opacity:1;pointer-events:auto}
+#side h3{font-family:"Noto Serif TC",serif;margin:4px 8px 14px;font-size:19px;letter-spacing:1px}
+#side .grp{font-size:12px;color:var(--soft);margin:18px 8px 6px;letter-spacing:2px}
+#side .item{display:flex;align-items:center;gap:10px;width:100%;border:none;background:none;color:var(--ink);font:inherit;font-size:15px;
+  padding:10px 12px;border-radius:12px;cursor:pointer;text-decoration:none;text-align:left}
+#side .item:hover{background:var(--bg)}
+#side .item.on{background:var(--chip);color:var(--accent);font-weight:500}
+#side .ic{width:22px;display:grid;place-items:center}
+#side .ic svg{width:20px;height:14px}
+#side .n{margin-left:auto;font-size:12px;color:var(--soft)}
+#side .close{position:absolute;top:14px;right:10px;border:none;background:none;color:var(--soft);font-size:16px;cursor:pointer;padding:6px 10px}
+.search{width:100%;padding:9px 14px 9px 36px;border:1px solid var(--line);border-radius:12px;background:var(--bg);
+  color:var(--ink);font-size:16px;font-family:inherit;outline:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23999' stroke-width='2'%3E%3Ccircle cx='7' cy='7' r='5'/%3E%3Cpath d='M11 11l4 4'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:14px center}
+  background-repeat:no-repeat;background-position:12px center}
 .search:focus{border-color:var(--accent)}
-nav{display:flex;gap:8px;overflow-x:auto;margin-top:12px;padding-bottom:2px;scrollbar-width:none}
-nav::-webkit-scrollbar{display:none}
-nav button{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 16px;border-radius:999px;
-  font-size:14px;cursor:pointer;font-family:inherit;transition:all .2s}
-nav button.on{background:var(--accent);border-color:var(--accent);color:var(--bg)}
-nav button .n{opacity:.6;margin-left:4px;font-size:12px}
-/* list */
-.list{display:grid;gap:16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;cursor:pointer;
-  box-shadow:var(--shadow);transition:transform .25s,box-shadow .25s;opacity:0;transform:translateY(16px);text-decoration:none;display:block}
-.card.in{opacity:1;transform:none;transition:opacity .6s,transform .6s}
-.card:hover{transform:translateY(-3px)}
-.meta{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--soft)}
-.tag{color:var(--accent);background:var(--chip);padding:2px 10px;border-radius:999px;font-size:12px}
-.card h2{font-family:"Noto Serif TC",serif;font-size:21px;margin:10px 0 6px;font-weight:600}
-.card .ex{color:var(--soft);font-size:15px;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.empty{text-align:center;color:var(--soft);padding:50px 0}
-/* post */
+
+/* 上半：樹 */
+#top{position:sticky;top:0;z-index:10;height:52vh;min-height:330px;display:flex;flex-direction:column;
+  background:linear-gradient(var(--bg) 88%,transparent);transition:background .4s}
+.bar{display:flex;align-items:center;gap:10px;padding:12px 14px 0}
+.bar h1{flex:1;text-align:center;font-family:"Noto Serif TC",serif;font-size:21px;margin:0;letter-spacing:3px;white-space:nowrap}
+.treebox{position:relative;flex:1;min-height:0;max-width:520px;width:100%;margin:0 auto}
+.treebox svg{width:100%;height:100%;display:block}
+.when{position:absolute;left:16px;top:4px;font-family:"Noto Serif TC",serif;font-weight:700;font-size:26px;color:var(--soft);opacity:.35;letter-spacing:1px;pointer-events:none}
+.legend{position:absolute;left:0;right:0;bottom:2px;display:flex;justify-content:center;gap:6px;flex-wrap:wrap;pointer-events:none}
+.legend span{display:flex;align-items:center;gap:3px;font-size:11px;color:var(--soft);background:var(--card);border:1px solid var(--line);
+  border-radius:999px;padding:1px 8px 1px 5px}
+.legend svg{width:16px;height:12px}
+#peek{position:absolute;left:50%;bottom:30px;transform:translateX(-50%) translateY(8px);opacity:0;pointer-events:none;transition:all .25s;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:8px 14px;min-width:200px;max-width:88%;
+  text-decoration:none;color:var(--ink);text-align:center;z-index:3}
+#peek.show{opacity:1;transform:translateX(-50%);pointer-events:auto}
+#peek small{color:var(--accent);font-size:12px}
+#peek b{display:block;font-family:"Noto Serif TC",serif;font-weight:600;font-size:15px;line-height:1.5}
+#peek i{font-style:normal;font-size:12px;color:var(--accent)}
+
+/* 下半：時間軸 */
+.wrap{max-width:640px;margin:0 auto;padding:6px 18px 60px}
+.intro{text-align:center;color:var(--soft);font-size:14px;padding:6px 0 26px}
+.intro b{display:block;color:var(--ink);font-family:"Noto Serif TC",serif;font-size:17px;font-weight:600;margin-bottom:2px}
+.cur{display:flex;align-items:center;gap:8px;background:var(--chip);color:var(--accent);border-radius:12px;padding:8px 14px;margin-bottom:18px;font-size:14px}
+.cur[hidden],.intro[hidden],.done[hidden]{display:none}
+.cur button{margin-left:auto;border:none;background:none;color:var(--accent);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer}
+.tl{position:relative;padding-left:26px}
+.tl::before{content:"";position:absolute;left:9px;top:4px;bottom:4px;width:2px;background:var(--line);border-radius:2px}
+.yh{position:relative;font-family:"Noto Serif TC",serif;font-weight:700;font-size:20px;color:var(--accent2);margin:22px 0 10px;letter-spacing:2px}
+.yh::before{content:"";position:absolute;left:-22px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:var(--accent2)}
+.yh:first-child{margin-top:0}
+.ent{position:relative;display:block;text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:11px 14px;margin-bottom:10px;opacity:.55;transition:opacity .35s,transform .35s,box-shadow .35s}
+.ent.on{opacity:1;box-shadow:var(--shadow);transform:translateX(3px)}
+.ent .dot{position:absolute;left:-29px;top:14px;width:22px;height:18px;display:grid;place-items:center;background:var(--bg);border-radius:6px}
+.ent .dot svg{width:18px;height:13px}
+.ent .m{font-size:12px;color:var(--soft)}
+.ent h2{font-family:"Noto Serif TC",serif;font-size:17px;font-weight:600;margin:1px 0 2px;line-height:1.5}
+.ent p{margin:0;color:var(--soft);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.empty{text-align:center;color:var(--soft);padding:40px 0}
+.done{text-align:center;color:var(--soft);font-size:14px;padding:26px 0 6px}
+#jump{position:fixed;right:14px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:12;border:1px solid var(--line);background:var(--card);color:var(--accent);
+  font:inherit;font-size:13px;padding:8px 14px;border-radius:999px;box-shadow:var(--shadow);cursor:pointer;transition:opacity .3s}
+#jump.hide{opacity:0;pointer-events:none}
+
+.about{margin-top:40px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow);scroll-margin-top:56vh}
+.about h3{font-family:"Noto Serif TC",serif;margin:0 0 6px}
+.about p{margin:0;color:var(--soft)}
+.story-link{display:inline-block;margin-top:14px;color:var(--accent);text-decoration:none;border:1px solid var(--line);background:var(--chip);padding:6px 16px;border-radius:999px;font-size:14px}
+footer{text-align:center;color:var(--soft);font-size:13px;margin-top:40px}
+
+/* 文章頁 */
 #post{display:none;max-width:680px;margin:0 auto;padding:70px 20px 60px}
 #post.show{display:block;animation:rise .6s}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
 .back{background:none;border:none;color:var(--accent);font-size:15px;padding:0;cursor:pointer;font-family:inherit}
+.meta{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--soft)}
+.tag{color:var(--accent);background:var(--chip);padding:2px 10px;border-radius:999px;font-size:12px}
 #post h1{font-family:"Noto Serif TC",serif;font-size:clamp(26px,6vw,34px);margin:16px 0 12px;font-weight:700;line-height:1.4}
 #post .body{font-family:"Noto Serif TC",serif;font-size:var(--fs,18px);white-space:pre-wrap;margin-top:30px;line-height:2.05}
 .poem .body{text-align:center}
@@ -81,45 +121,65 @@ nav button .n{opacity:.6;margin-left:4px;font-size:12px}
 .pn a{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-decoration:none;font-size:14px;color:var(--soft)}
 .pn a b{display:block;color:var(--ink);font-family:"Noto Serif TC",serif;font-weight:600;margin-top:2px}
 .pn a.next{text-align:right}
-.about{margin-top:48px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
-.about h3{font-family:"Noto Serif TC",serif;margin:0 0 6px}
-.about p{margin:0;color:var(--soft)}
-footer{text-align:center;color:var(--soft);font-size:13px;margin-top:46px}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.card{opacity:1;transform:none}.hero h1,.hero p,.hero .count{opacity:1}}
+
+@media (min-width:1000px){
+  #side{transform:none;box-shadow:none}
+  #scrim,#menuBtn,#side .close{display:none!important}
+  #home,#post,#jump{margin-left:280px}
+  #jump{margin-left:0}
+  #post{max-width:none;padding-left:calc((100vw - 280px - 680px)/2)}
+  .bar{padding-left:54px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <div id="progress"></div>
-<div class="topbar">
-  <button class="icon-btn" id="themeBtn" aria-label="切換深淺色">🌙</button>
-</div>
+<div id="scrim"></div>
+
+<aside id="side" aria-label="選單">
+  <button class="close" id="closeBtn" aria-label="關閉選單">✕</button>
+  <h3>Yeeeee的小角落</h3>
+  <input class="search" id="search" placeholder="搜尋文章…" autocomplete="off">
+  <div class="grp">分類</div>
+  <div id="cats"></div>
+  <div class="grp">更多</div>
+  <a class="item" href="story.html"><span class="ic">🌱</span>我的故事</a>
+  <a class="item" href="#about" id="aboutLink"><span class="ic">☺︎</span>關於我</a>
+</aside>
 
 <div id="home">
-  <section class="hero">
-    <h1>怡穎的小角落</h1>
-    <p>寫給自己，也寫給路過的你</p>
-    <span class="count" id="count"></span>
-    <svg class="waves" viewBox="0 24 150 28" preserveAspectRatio="none" aria-hidden="true">
-      <defs><path id="w" d="M-160 44c30 0 58-18 88-18s58 18 88 18 58-18 88-18 58 18 88 18v44h-352z"/></defs>
-      <use href="#w" x="48" y="0"/><use href="#w" x="48" y="3"/><use href="#w" x="48" y="5"/><use href="#w" x="48" y="7"/>
-    </svg>
-  </section>
+  <div id="top">
+    <div class="bar">
+      <button class="icon-btn" id="menuBtn" aria-label="打開選單"><i></i></button>
+      <h1>Yeeeee的小角落</h1>
+      <button class="icon-btn" id="themeBtn" aria-label="切換深淺色">🌙</button>
+    </div>
+    <div class="treebox">
+      <svg id="tree" viewBox="0 0 300 320" preserveAspectRatio="xMidYMax meet" aria-hidden="true"></svg>
+      <div class="when" id="when"></div>
+      <div class="legend" id="legend"></div>
+      <a id="peek" href="#"><small></small><b></b><i>讀這篇 →</i></a>
+    </div>
+  </div>
+
   <div class="wrap">
-    <div class="controls">
-      <input class="search" id="search" placeholder="搜尋文章…" autocomplete="off">
-      <nav id="nav"></nav>
-    </div>
-    <div class="list" id="list"></div>
-    <div class="about">
+    <div class="intro" id="intro"><b>寫給自己，也寫給路過的你</b>往下滑，從第一篇開始，每一篇都會長出一片葉子 ↓</div>
+    <div class="cur" id="cur" hidden><span id="curText"></span><button id="showAll">看全部</button></div>
+    <div class="tl" id="tl"><div class="empty">文章載入中…</div></div>
+    <div class="done" id="done" hidden>🌳 這就是到今天為止的樹</div>
+    <div class="about" id="about">
       <h3>關於我</h3>
-      <p>我是怡穎，喜歡花蓮的海，喜歡把心裡的話寫下來。這裡放著我的年度報告、詩、歌，還有一些小小的牢騷。</p>
+      <p>我是Yeeeee，喜歡花蓮的海，喜歡把心裡的話寫下來。這裡放著我的年度報告、詩、歌，還有一些小小的牢騷。</p>
+      <a class="story-link" href="story.html">🌱 看看我的故事 →</a>
     </div>
-    <footer>© 怡穎・用文字慢慢認識自己</footer>
+    <footer>© Yeeeee・用文字慢慢認識自己</footer>
   </div>
 </div>
+<button id="jump" class="hide">跳到最新 ↓</button>
 
 <article id="post">
-  <button class="back" onclick="location.hash=''">← 回到文章列表</button>
+  <button class="back" id="backBtn">← 回到時間軸</button>
   <div class="meta" style="margin-top:22px"><span class="tag" id="pTag"></span><span id="pDate"></span><span id="pRead"></span></div>
   <h1 id="pTitle"></h1>
   <div class="tools"><button onclick="fs(-1)">A−</button><button onclick="fs(1)">A+</button><button onclick="share()" id="shareBtn">複製連結</button></div>
@@ -130,9 +190,10 @@ footer{text-align:center;color:var(--soft);font-size:13px;margin-top:46px}
 
 <script>
 /* 文章都存在 posts.json，請用 write.html 後台新增或修改 */
-const cats=["全部","年度報告","詩","歌","小牢騷"];
-let posts=[],sorted=[];
+const CATS=["全部","年度報告","詩","歌","小牢騷"];
+let posts=[];
 let cur="全部", q="";
+let N=1;
 const $=id=>document.getElementById(id);
 
 function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
@@ -140,55 +201,270 @@ function setTheme(t){document.documentElement.dataset.theme=t;$("themeBtn").text
 setTheme(store("theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
 $("themeBtn").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
 
-function renderNav(){
-  $("nav").innerHTML="";
-  cats.forEach(c=>{
-    const n=c==="全部"?posts.length:posts.filter(p=>p.category===c).length;
-    const b=document.createElement("button");
-    b.innerHTML=`${c}<span class="n">${n}</span>`;
-    if(c===cur)b.className="on";
-    b.onclick=()=>{cur=c;renderNav();renderList()};
-    $("nav").appendChild(b);
-  });
-}
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.1});
-function renderList(){
-  const L=$("list");L.innerHTML="";
-  const items=sorted.filter(p=>(cur==="全部"||p.category===cur)&&(p.title+p.content).toLowerCase().includes(q));
-  if(!items.length){L.innerHTML='<div class="empty">找不到文章，換個關鍵字試試看</div>';return}
-  items.forEach((p,k)=>{
-    const a=document.createElement("a");a.className="card";a.href="#p"+encodeURIComponent(p.id);
-    a.innerHTML=`<div class="meta"><span class="tag"></span><span></span></div><h2></h2><p class="ex"></p>`;
-    a.querySelector(".tag").textContent=p.category;
-    a.querySelector(".meta span:last-child").textContent=p.date;
-    a.querySelector("h2").textContent=p.title;
-    a.querySelector(".ex").textContent=p.content.replace(/\s+/g," ");
-    a.style.transitionDelay=(k*60)+"ms";
-    L.appendChild(a);io.observe(a);
-  });
-}
-$("search").oninput=e=>{q=e.target.value.trim().toLowerCase();renderList()};
+const openMenu=o=>document.body.classList.toggle("menu",o);
+$("menuBtn").onclick=()=>openMenu(true);
+$("closeBtn").onclick=$("scrim").onclick=()=>openMenu(false);
+$("aboutLink").onclick=e=>{e.preventDefault();openMenu(false);if(location.hash)location.hash="";setTimeout(()=>$("about").scrollIntoView({behavior:"smooth"}),50)};
+addEventListener("keydown",e=>{if(e.key==="Escape")openMenu(false)});
 
+/* 樹 */
+const NS="http://www.w3.org/2000/svg";
+const svg=$("tree");
+function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);(parent||svg).appendChild(e);return e}
+let seed=11;const rnd=()=>(seed=seed*16807%2147483647)/2147483647;
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const back=t=>{const c=1.6;t=clamp(t);return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2)};
+const f1=n=>n.toFixed(1);
+
+const GROUND=292,CX=150,TR=226;
+const cx=y=>CX+4*Math.sin((GROUND-y)/55);
+const trunkPt=f=>{const y=GROUND-14-TR*f;return [cx(y),y]};
+const quad=(b,t)=>{const u=1-t;return [u*u*b.P0[0]+2*u*t*b.C[0]+t*t*b.P2[0],u*u*b.P0[1]+2*u*t*b.C[1]+t*t*b.P2[1]]};
+
+/* 樹的骨架 */
+const B=[];
+function addBranch(P0,side,deg,L,t0,t1,w,ts){
+  const a=deg*Math.PI/180,dx=side*Math.sin(a),dy=-Math.cos(a);
+  const b={P0,P2:[P0[0]+dx*L,P0[1]+dy*L],C:[P0[0]+dx*L*.6,P0[1]+dy*L*.25],t0,t1,w,ts,side,deg,dir:Math.atan2(dy,dx)*180/Math.PI};
+  B.push(b);return b;
+}
+B.push({P0:trunkPt(0),C:trunkPt(.5),P2:trunkPt(1),t0:0,t1:1,w:0,ts:[.04,.08,.12,.16,.2],side:1,deg:0,dir:-90,isTrunk:true});
+const MAINS=9;
+for(let i=0;i<MAINS;i++){
+  const u=i/(MAINS-1),f=.24+.69*u,side=i%2?1:-1,deg=66-32*u,L=86-60*u,t1=Math.min(1,f+.2),w=2+4.5*(1-f);
+  const m=addBranch(trunkPt(f),side,deg,L,f,t1,w,[.2,.32,.44,.56,.68,.8,.9,1]);
+  [[.4,-30,.48],[.72,-52,.36]].forEach(([t,dd,lr])=>{
+    const st=f+(t1-f)*t;addBranch(quad(m,t),side,Math.max(8,deg+dd),L*lr,st,Math.min(1,st+.14),w*.5,[.35,.6,.8,1]);
+  });
+}
+addBranch(trunkPt(.97),-1,32,24,.94,1,1.4,[.5,1]);
+addBranch(trunkPt(.97),1,26,22,.94,1,1.4,[.5,1]);
+
+/* 葉子可以長的位置 */
+let cand=[];
+B.forEach(b=>b.ts.forEach(t=>{
+  const [x,y]=quad(b,t),sd=rnd()<.5?-1:1;
+  const off=(rnd()-.5)*5;cand.push({b,t,x:x+off,y:y+off*.6,tau:b.t0+(b.t1-b.t0)*t,ang:b.dir+sd*(30+rnd()*45)});
+}));
+
+/* 四種分類的樣子 */
+const KIND={
+  "小牢騷":{d:"M0 0C2-4 8-4.8 10.5 0C8 4.8 2 4 0 0Z",fills:["var(--leaf1)","var(--leaf2)"],size:.95},
+  "詩":{d:"M0 0C4-2.4 11-2.8 17 0C11 2.8 4 2.4 0 0Z",fills:["var(--leaf3)"],size:1},
+  "歌":{d:"M0 0L8.5-6.5Q14.5 0 8.5 6.5Z",fills:["var(--ginkgo)"],size:1.05},
+  "年度報告":{flower:true,size:1.9}
+};
+const ORDER=["年度報告","詩","歌","小牢騷"];
+function shape(kind,parent,k){
+  const K=KIND[kind]||KIND["小牢騷"];
+  if(K.flower){
+    for(let i=0;i<5;i++)el("ellipse",{cx:3.6,cy:0,rx:3.4,ry:2.4,fill:"var(--flower)",transform:`rotate(${i*72})`},parent);
+    el("circle",{r:1.9,fill:"var(--pistil)"},parent);
+  }else{
+    el("path",{d:K.d,fill:K.fills[k%K.fills.length]},parent);
+  }
+}
+
+/* 圖例 */
+function legendIcon(kind){
+  const s=document.createElementNS(NS,"svg");s.setAttribute("viewBox",kind==="年度報告"?"-8 -6 16 12":"-1 -6 18 12");shape(kind,s,1);return s;
+}
+
+/* 背景 */
+el("path",{d:"M0 320 L0 300 Q75 284 150 288 Q225 284 300 300 L300 320Z",fill:"var(--ground)"});
+const seedEl=el("ellipse",{cx:CX,cy:GROUND-2,rx:5,ry:3.5,fill:"var(--trunk)"});
+const branchG=el("g",{fill:"none",stroke:"var(--trunk)","stroke-linecap":"round","stroke-linejoin":"round"});
+B.forEach(b=>{if(!b.isTrunk)b.el=el("path",{},branchG)});
+const trunk=el("path",{fill:"var(--trunk)"});
+const leafG=el("g",{});
+
+let items=[],LS=1;
+function plant(list){
+  /* 由舊到新，一篇文章一片葉子 */
+  items=list.map((p,i)=>({...p,_i:i})).sort((a,b)=>String(a.date).localeCompare(String(b.date))||b._i-a._i);
+  const P=items.length;if(!P)return;
+  N=P;
+  while(cand.length<P){
+    const extra=cand.slice(0,P-cand.length).map(c=>({...c,x:c.x+(rnd()-.5)*12,y:c.y+(rnd()-.5)*10,ang:c.ang+150+rnd()*60}));
+    cand=cand.concat(extra);
+  }
+  const used=new Set();
+  LS=clamp(2.6/Math.sqrt(P/8),1.4,2.4);
+  items.forEach((it,k)=>{
+    it.at=k+.55;   /* 滑過第幾篇，就長出第幾片 */
+    const sk=it.at/N,flower=it.category==="年度報告";
+    let best=-1,score=-1;
+    cand.forEach((c,i)=>{
+      if(used.has(i)||c.tau>sk)return;
+      const sc=c.tau+(flower&&!c.b.isTrunk&&c.t>=.8?1:0);   /* 花優先開在枝頭 */
+      if(sc>score){score=sc;best=i}
+    });
+    if(best<0)best=cand.findIndex((c,i)=>!used.has(i));
+    used.add(best);it.slot=cand[best];
+    it.g=el("g",{style:"cursor:pointer"},leafG);
+    el("circle",{cx:flower?0:6,cy:0,r:flower?8:7,fill:"transparent"},it.g);
+    shape(it.category,it.g,k);
+    it.g.addEventListener("click",()=>peek(it));
+  });
+  /* 年度報告的花畫在最上層 */
+  items.filter(it=>it.category==="年度報告").forEach(it=>leafG.appendChild(it.g));
+  const lg=$("legend");lg.innerHTML="";
+  ORDER.forEach(kind=>{const n=items.filter(it=>it.category===kind).length;if(!n)return;
+    const sp=document.createElement("span");sp.appendChild(legendIcon(kind));sp.appendChild(document.createTextNode(kind+" "+n));lg.appendChild(sp)});
+  buildTimeline();
+}
+
+let peekT=0;
+function peek(it){
+  const pk=$("peek");pk.href="./#p"+encodeURIComponent(it.id);
+  pk.querySelector("small").textContent=it.category+"・"+it.date;
+  pk.querySelector("b").textContent=it.title;
+  pk.classList.add("show");clearTimeout(peekT);peekT=setTimeout(()=>pk.classList.remove("show"),4500);
+}
+
+function draw(p){
+  const s=clamp(p/N);
+  const yt=GROUND-14-TR*Math.max(s,.02),base=2+15*s,pts=[];
+  for(let k=0;k<=14;k++){const t=k/14,y=GROUND+(yt-GROUND)*t,hw=(base/2)*(1-t)+.8*t;pts.push([cx(y),y,hw])}
+  trunk.setAttribute("d","M"+pts.map(([x,y,w])=>f1(x-w)+" "+f1(y)).join("L")+"L"+pts.reverse().map(([x,y,w])=>f1(x+w)+" "+f1(y)).join("L")+"Z");
+  seedEl.setAttribute("opacity",clamp(1-p*6));
+  B.forEach(b=>{
+    b.g=b.isTrunk?s:clamp((s-b.t0)/(b.t1-b.t0));
+    if(b.isTrunk)return;
+    if(b.g<=0){b.el.setAttribute("d","");return}
+    const q=[];for(let k=0;k<=10;k++)q.push(quad(b,b.g*k/10));
+    b.el.setAttribute("d","M"+q.map(([x,y])=>f1(x)+" "+f1(y)).join("L"));
+    b.el.setAttribute("stroke-width",(b.w*(.5+.5*s)).toFixed(2));
+  });
+  items.forEach(it=>{
+    const c=it.slot,reach=c.b.isTrunk?1:clamp((c.b.g-c.t+.05)*8);
+    const sc=back((p-it.at+.35)/.35)*reach*LS*(KIND[it.category]||KIND["小牢騷"]).size;
+    it.g.setAttribute("transform",`translate(${f1(c.x)} ${f1(c.y)}) rotate(${f1(c.ang)}) scale(${Math.max(0,sc).toFixed(3)})`);
+    const show=cur==="全部"||it.category===cur;
+    it.g.style.opacity=show?1:.15;
+    it.g.style.pointerEvents=sc>.3&&show?"auto":"none";
+  });
+}
+
+
+/* ---------- 時間軸 ---------- */
+let ents=[];
+function filtering(){return cur!=="全部"||q!==""}
+function buildTimeline(){
+  const T=$("tl");T.innerHTML="";ents=[];
+  const list=items.filter(it=>(cur==="全部"||it.category===cur)&&(it.title+it.content).toLowerCase().includes(q));
+  $("cur").hidden=!filtering();
+  $("curText").textContent=(q?`搜尋「${q}」`:cur)+`・${list.length} 篇`;
+  $("intro").hidden=filtering();
+  $("done").hidden=!list.length||filtering();
+  if(!list.length){T.innerHTML='<div class="empty">'+(posts.length?"找不到文章，換個關鍵字試試看":"還沒有文章")+'</div>';measure();return}
+  let year="";
+  list.forEach(it=>{
+    const y=String(it.date).slice(0,4);
+    if(y!==year){year=y;const h=document.createElement("div");h.className="yh";h.textContent=y;T.appendChild(h)}
+    const a=document.createElement("a");a.className="ent";a.href="#p"+encodeURIComponent(it.id);
+    a.innerHTML='<span class="dot"></span><div class="m"></div><h2></h2><p></p>';
+    a.querySelector(".dot").appendChild(legendIcon(KIND[it.category]?it.category:"小牢騷"));
+    a.querySelector(".m").textContent=it.category+"・"+String(it.date).slice(5).replace("-","/");
+    a.querySelector("h2").textContent=it.title;
+    a.querySelector("p").textContent=it.content.replace(/\s+/g," ");
+    a._it=it;T.appendChild(a);ents.push(a);
+  });
+  measure();
+}
+function renderCats(){
+  $("cats").innerHTML="";
+  CATS.forEach(c=>{
+    const n=c==="全部"?posts.length:posts.filter(p=>p.category===c).length;
+    const b=document.createElement("button");b.className="item"+(c===cur?" on":"");
+    const ic=document.createElement("span");ic.className="ic";
+    if(c==="全部")ic.textContent="🌳";else ic.appendChild(legendIcon(c));
+    b.appendChild(ic);b.appendChild(document.createTextNode(c==="全部"?"全部文章":c));
+    const sp=document.createElement("span");sp.className="n";sp.textContent=n;b.appendChild(sp);
+    b.onclick=()=>{cur=c;renderCats();buildTimeline();openMenu(false);if(location.hash)location.hash="";scrollTo({top:0})};
+    $("cats").appendChild(b);
+  });
+}
+$("showAll").onclick=()=>{cur="全部";q="";$("search").value="";renderCats();buildTimeline();scrollTo({top:0})};
+let qT=0;
+$("search").oninput=e=>{clearTimeout(qT);qT=setTimeout(()=>{q=e.target.value.trim().toLowerCase();buildTimeline();scrollTo({top:0})},250)};
+$("search").onkeydown=e=>{if(e.key==="Enter"){e.target.blur();openMenu(false)}};
+
+/* ---------- 捲動 → 樹長大 ---------- */
+let target=0,shown=0,raf=0;
+const still=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function measure(){
+  if($("home").style.display==="none")return;
+  const topB=$("top").getBoundingClientRect().bottom;
+  let p=0,act=-1;
+  if(filtering()){p=N}
+  else{
+    const mid=topB+(innerHeight-topB)*.3;
+    ents.forEach((a,k)=>{const r=a.getBoundingClientRect();const f=clamp((mid-r.top)/(r.height+10));p+=f;if(f>0)act=k});
+  }
+  ents.forEach((a,k)=>a.classList.toggle("on",filtering()||k===act));
+  const it=act>=0?ents[act]._it:null;
+  $("when").textContent=!filtering()&&it?String(it.date).slice(0,7).replace("-","."):"";
+  target=p;
+  const nearEnd=filtering()||!ents.length||p>=N-.5;
+  $("jump").classList.toggle("hide",nearEnd||p<1);
+  if(!raf)raf=requestAnimationFrame(tick);
+}
+function tick(){
+  shown=still?target:shown+(target-shown)*.14;
+  draw(shown);
+  raf=Math.abs(target-shown)>.003?requestAnimationFrame(tick):0;
+}
+addEventListener("scroll",measure,{passive:true});
+addEventListener("resize",measure);
+$("jump").onclick=()=>{const l=ents[ents.length-1];if(l)l.scrollIntoView({behavior:"smooth",block:"center"})};
+
+/* ---------- 文章頁 ---------- */
 function showPost(id){
-  const i=sorted.findIndex(p=>String(p.id)===id); if(i<0){location.hash="";return}
-  const p=sorted[i];
+  const i=items.findIndex(p=>String(p.id)===id); if(i<0){location.hash="";return}
+  const p=items[i];
   $("pTag").textContent=p.category;$("pDate").textContent=p.date;
   $("pRead").textContent="約 "+Math.max(1,Math.round(p.content.length/300))+" 分鐘";
   $("pTitle").textContent=p.title;$("pBody").textContent=p.content;
   $("post").classList.toggle("poem",p.category==="詩");
-  const prev=sorted[i+1],next=sorted[i-1];
+  const prev=items[i-1],next=items[i+1];
   $("pn").innerHTML=(prev?`<a href="#p${encodeURIComponent(prev.id)}">← 上一篇<b></b></a>`:"<span></span>")+(next?`<a class="next" href="#p${encodeURIComponent(next.id)}">下一篇 →<b></b></a>`:"");
   const bs=$("pn").querySelectorAll("b");let j=0;
   if(prev)bs[j++].textContent=prev.title; if(next)bs[j].textContent=next.title;
-  document.title=p.title+"｜怡穎的小角落";
-  $("home").style.display="none";$("post").classList.remove("show");void $("post").offsetWidth;$("post").classList.add("show");
+  document.title=p.title+"｜Yeeeee的小角落";
+  $("home").style.display="none";$("jump").style.display="none";
+  $("post").classList.remove("show");void $("post").offsetWidth;$("post").classList.add("show");
   scrollTo(0,0);
+}
+let lastY=0,pushed=0;
+function showHome(){
+  const was=$("post").classList.contains("show");
+  $("post").classList.remove("show");$("home").style.display="block";$("jump").style.display="";
+  document.title="Yeeeee的小角落";$("progress").style.width=0;
+  if(was)scrollTo(0,lastY);
+  measure();
 }
 function route(){
   const m=location.hash.match(/^#p(.+)$/);
-  if(m)showPost(decodeURIComponent(m[1]));
-  else{$("post").classList.remove("show");$("home").style.display="block";document.title="怡穎的小角落";$("progress").style.width=0}
+  if(m){if($("home").style.display!=="none")lastY=scrollY;showPost(decodeURIComponent(m[1]))}
+  else{showHome();if(location.hash==="#about")setTimeout(()=>$("about").scrollIntoView(),30)}
 }
+/* 點文章：直接打開（預覽環境不支援網址切換時也能讀） */
+function openPost(id){
+  if($("home").style.display!=="none")lastY=scrollY;
+  try{history.pushState(null,"","#p"+encodeURIComponent(id));pushed++}catch(e){}
+  showPost(id);
+}
+document.addEventListener("click",e=>{
+  const a=e.target.closest&&e.target.closest("a[href]");if(!a)return;
+  const m=a.getAttribute("href").match(/#p(.+)$/);if(!m)return;
+  e.preventDefault();openPost(decodeURIComponent(m[1]));
+});
+$("backBtn").onclick=()=>{
+  if(pushed>0){pushed--;history.back()}
+  else{try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}showHome()}
+};
+addEventListener("popstate",()=>{if(!location.hash.startsWith("#p")&&pushed>0)pushed=0;route()});
 addEventListener("scroll",()=>{
   if(!$("post").classList.contains("show"))return;
   const h=document.documentElement;$("progress").style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight||1)*100)+"%";
@@ -201,18 +477,17 @@ function share(){
   (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>{$("shareBtn").textContent="已複製！";setTimeout(()=>$("shareBtn").textContent="複製連結",1500)}).catch(()=>prompt("複製這個連結：",u));
 }
 
-$("count").textContent="載入中…";
-$("list").innerHTML='<div class="empty">文章載入中…</div>';
+draw(0);renderCats();
 fetch("posts.json?t="+Date.now(),{cache:"no-store"})
   .then(r=>{if(!r.ok)throw new Error(r.status);return r.json()})
   .then(d=>{
     posts=Array.isArray(d)?d:[];
-    sorted=posts.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)));
-    $("count").textContent=`共 ${posts.length} 篇文章`;
-    renderNav();renderList();route();
-    addEventListener("hashchange",route);
+    renderCats();
+    plant(posts);
+    if(!posts.length)buildTimeline();
+    route();addEventListener("hashchange",route);
   })
-  .catch(()=>{$("count").textContent="";$("list").innerHTML='<div class="empty">文章載入失敗，請重新整理看看</div>'});
+  .catch(()=>{$("tl").innerHTML='<div class="empty">文章載入失敗，請重新整理看看</div>'});
 </script>
 </body>
 </html>

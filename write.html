@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="寫文章">
 <meta name="theme-color" content="#f5f1ea">
-<title>寫文章｜怡穎的小角落</title>
+<title>寫文章｜Yeeeee的小角落</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -40,6 +40,7 @@ textarea{min-height:46vh;resize:vertical;font-family:"Noto Serif TC",serif;line-
 .cats{display:flex;gap:8px;flex-wrap:wrap}
 .cats button{flex:1;min-width:70px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:9px 6px;border-radius:999px;
   font:inherit;font-size:14px;cursor:pointer}
+#fcats button{flex:none;min-width:0;padding:5px 12px;font-size:13px}
 .cats button.on{background:var(--accent);border-color:var(--accent);color:var(--bg)}
 .btn{display:block;width:100%;border:none;border-radius:12px;padding:14px;font:inherit;font-size:16px;font-weight:500;cursor:pointer;
   background:var(--accent);color:var(--bg);margin-top:16px}
@@ -99,7 +100,9 @@ textarea{min-height:46vh;resize:vertical;font-family:"Noto Serif TC",serif;line-
     </div>
 
     <div class="card">
-      <h2>已發佈的文章</h2>
+      <h2>已發佈的文章 <span id="total" style="font-size:13px;color:var(--soft);font-weight:400"></span></h2>
+      <input id="find" placeholder="搜尋標題或內容…" autocomplete="off" style="margin-bottom:10px">
+      <div class="cats" id="fcats" style="margin-bottom:6px"></div>
       <div id="list"><div class="empty">載入中…</div></div>
     </div>
 
@@ -225,10 +228,21 @@ $("clearForm").onclick=()=>{if(($("title").value||$("content").value)&&!confirm(
 $("cancelEdit").onclick=()=>resetForm();
 
 /* ----- 文章列表 ----- */
+let fcat="全部",fq="",flimit=30;
+function renderFcats(){
+  $("fcats").innerHTML="";
+  ["全部",...CATS].forEach(c=>{const n=c==="全部"?posts.length:posts.filter(p=>p.category===c).length;
+    const b=document.createElement("button");b.type="button";b.textContent=c+" "+n;if(c===fcat)b.className="on";
+    b.onclick=()=>{fcat=c;flimit=30;renderList()};$("fcats").appendChild(b)});
+}
+$("find").addEventListener("input",e=>{fq=e.target.value.trim().toLowerCase();flimit=30;renderList()});
 function renderList(){
+  renderFcats();$("total").textContent="共 "+posts.length+" 篇";
   const L=$("list");L.innerHTML="";
-  const items=posts.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)));
-  if(!items.length){L.innerHTML='<div class="empty">還沒有文章</div>';return}
+  const all=posts.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)))
+    .filter(p=>(fcat==="全部"||p.category===fcat)&&(String(p.title)+String(p.content)).toLowerCase().includes(fq));
+  const items=all.slice(0,flimit);
+  if(!all.length){L.innerHTML='<div class="empty">'+(posts.length?"找不到文章":"還沒有文章")+'</div>';return}
   items.forEach(p=>{
     const d=document.createElement("div");d.className="item";
     d.innerHTML='<div class="t"><b></b><span></span></div><button>修改</button><button class="del">刪除</button>';
@@ -246,6 +260,8 @@ function renderList(){
     };
     L.appendChild(d);
   });
+  if(all.length>flimit){const m=document.createElement("button");m.className="btn ghost";m.textContent="再顯示 30 篇（還有 "+(all.length-flimit)+" 篇）";
+    m.onclick=()=>{flimit+=30;renderList()};L.appendChild(m)}
 }
 
 /* ----- 啟動 ----- */
