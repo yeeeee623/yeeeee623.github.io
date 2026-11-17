@@ -35,6 +35,15 @@ label:first-of-type{margin-top:0}
 input,select,textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);
   border-radius:12px;padding:11px 14px;outline:none;-webkit-appearance:none;appearance:none}
 input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+.ph{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:8px}
+.ph .p{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--bg)}
+.ph img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
+.ph .n{position:absolute;left:5px;top:5px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;border-radius:6px;padding:0 6px}
+.ph .acts{display:flex}
+.ph .acts button{flex:1;border:none;background:var(--card);color:var(--accent);font:inherit;font-size:12px;padding:5px 0;cursor:pointer}
+.ph .acts button.rm{color:var(--danger)}
+.addph{display:flex;align-items:center;justify-content:center;gap:6px;border:1px dashed var(--line);border-radius:12px;padding:12px;color:var(--soft);font-size:14px;cursor:pointer;margin-top:4px}
+.addph input{display:none}
 textarea{min-height:46vh;resize:vertical;font-family:"Noto Serif TC",serif;line-height:2}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .cats{display:flex;gap:8px;flex-wrap:wrap}
@@ -92,6 +101,14 @@ textarea{min-height:46vh;resize:vertical;font-family:"Noto Serif TC",serif;line-
       <div class="cats" id="cats"></div>
       <label for="date">日期</label>
       <input id="date" type="date">
+      <label for="tags">Hashtag（可留空，用空白分開）</label>
+      <input id="tags" placeholder="#花蓮 #夜晚" autocomplete="off" autocapitalize="off">
+      <label for="yt">YouTube 連結（可留空，放歌用）</label>
+      <input id="yt" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off" autocapitalize="off">
+      <label>照片（可留空）</label>
+      <label class="addph">📷 選擇照片（可以一次選多張）<input id="phIn" type="file" accept="image/*" multiple></label>
+      <div class="ph" id="ph"></div>
+      <div class="hint"><span>照片預設放在文字上面；按「插入」可以放到內容裡游標的位置</span></div>
       <label for="content">內容</label>
       <textarea id="content" placeholder="直接按 Enter 換行就好"></textarea>
       <div class="hint"><span id="draftNote">草稿會自動保存</span><span id="wc">0 字</span></div>
@@ -104,6 +121,15 @@ textarea{min-height:46vh;resize:vertical;font-family:"Noto Serif TC",serif;line-
       <input id="find" placeholder="搜尋標題或內容…" autocomplete="off" style="margin-bottom:10px">
       <div class="cats" id="fcats" style="margin-bottom:6px"></div>
       <div id="list"><div class="empty">載入中…</div></div>
+    </div>
+
+    <div class="card">
+      <h2>關於我</h2>
+      <label for="caption">照片說明</label>
+      <input id="caption" placeholder="2024/1/29 於實驗室">
+      <label for="about">內容</label>
+      <textarea id="about" style="min-height:30vh" placeholder="載入中…"></textarea>
+      <button class="btn" id="saveAbout">儲存「關於我」</button>
     </div>
 
     <div class="foot"><button id="logout">清除這支手機上的金鑰</button></div>
@@ -131,6 +157,8 @@ let cat=CATS[0];
 let busy=false;
 
 function toast(msg,ms=2600){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),ms)}
+function parseTags(v){return [...new Set(String(v||"").split(/[\s,，、#＃]+/).map(t=>t.trim()).filter(Boolean))]}
+function showTags(a){return (a||[]).map(t=>"#"+t).join(" ")}
 function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function newId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
 
@@ -184,6 +212,52 @@ async function commit(change,message,okMsg){
 }
 function setBusy(b){$("publish").disabled=b;$("publish").textContent=b?"上傳中…":(editId?"儲存修改":"發佈")}
 
+/* ----- 照片 ----- */
+let photos=[]; /* {path} 已上傳；{data,blob} 還沒上傳 */
+const MAXSIDE=1600;
+function shrink(file){return new Promise((res,rej)=>{
+  const url=URL.createObjectURL(file),im=new Image();
+  im.onload=()=>{let w=im.naturalWidth,h=im.naturalHeight;const k=Math.min(1,MAXSIDE/Math.max(w,h));w=Math.round(w*k);h=Math.round(h*k);
+    const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(im,0,0,w,h);URL.revokeObjectURL(url);
+    res(c.toDataURL("image/jpeg",.82))};
+  im.onerror=()=>{URL.revokeObjectURL(url);rej()};im.src=url})}
+$("phIn").onchange=async e=>{
+  const fs=[...e.target.files];e.target.value="";
+  for(const f of fs){try{photos.push({data:await shrink(f)})}catch(err){toast("有一張照片讀不了，換一張試試")}}
+  renderPhotos();
+};
+function rawURL(p){return `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${p}`}
+function renderPhotos(){
+  const P=$("ph");P.innerHTML="";
+  photos.forEach((ph,i)=>{
+    const d=document.createElement("div");d.className="p";
+    d.innerHTML='<img alt=""><span class="n"></span><div class="acts"><button type="button">插入</button><button type="button" class="rm">移除</button></div>';
+    d.querySelector("img").src=ph.data||rawURL(ph.path);d.querySelector(".n").textContent="照片"+(i+1);
+    const [ins,rm]=d.querySelectorAll("button");
+    ins.onclick=()=>{const t=$("content"),m="[照片"+(i+1)+"]",s=t.selectionStart??t.value.length;
+      t.value=t.value.slice(0,s)+"\n"+m+"\n"+t.value.slice(t.selectionEnd??s);t.focus();t.selectionStart=t.selectionEnd=s+m.length+2;saveDraft()};
+    rm.onclick=()=>{
+      const t=$("content");let v=t.value.replace(new RegExp("\\n?\\[照片"+(i+1)+"\\]\\n?","g"),"\n");
+      for(let k=i+2;k<=photos.length;k++)v=v.split("[照片"+k+"]").join("[照片"+(k-1)+"]");
+      t.value=v;photos.splice(i,1);renderPhotos();saveDraft()};
+    P.appendChild(d);
+  });
+}
+async function uploadPending(baseId){
+  const out=[];let n=0;const pend=photos.filter(p=>p.data).length;
+  for(let i=0;i<photos.length;i++){
+    const ph=photos[i];
+    if(ph.path){out.push(ph.path);continue}
+    n++;$("publish").textContent=`上傳照片 ${n}/${pend}…`;
+    const path=`images/${baseId}-${Date.now().toString(36)}${i}.jpg`;
+    const r=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`,{method:"PUT",headers:headers(true),
+      body:JSON.stringify({message:"上傳照片",content:ph.data.split(",")[1],branch:BRANCH})});
+    if(!r.ok)throw {status:r.status};
+    photos[i]={path};out.push(path);
+  }
+  return out;
+}
+
 /* ----- 表單 ----- */
 function renderCats(){
   $("cats").innerHTML="";
@@ -192,7 +266,9 @@ function renderCats(){
 }
 function fillForm(p){
   $("title").value=p.title||"";cat=CATS.includes(p.category)?p.category:CATS[0];
-  $("date").value=p.date||today();$("content").value=p.content||"";renderCats();updateWc();
+  $("date").value=p.date||today();$("content").value=p.content||"";$("tags").value=typeof p.tags==="string"?p.tags:showTags(p.tags);renderCats();updateWc();
+  $("yt").value=p.youtube||"";
+  photos=(Array.isArray(p.photos)?p.photos:[]).filter(x=>typeof x==="string").map(path=>({path}));renderPhotos();
 }
 function setEditing(p){
   editId=p?p.id:null;
@@ -202,25 +278,35 @@ function setEditing(p){
 }
 function updateWc(){$("wc").textContent=$("content").value.replace(/\s/g,"").length+" 字"}
 function saveDraft(){
-  store("draft",JSON.stringify({editId,title:$("title").value,category:cat,date:$("date").value,content:$("content").value}));
+  store("draft",JSON.stringify({editId,title:$("title").value,category:cat,date:$("date").value,content:$("content").value,tags:$("tags").value,youtube:$("yt").value,photos:photos.filter(p=>p.path).map(p=>p.path)}));
   $("draftNote").textContent="草稿已保存";
 }
 function clearDraft(){store("draft",null);$("draftNote").textContent="草稿會自動保存"}
 function resetForm(){setEditing(null);fillForm({date:today()});clearDraft()}
 
-["title","date","content"].forEach(id=>$(id).addEventListener("input",()=>{if(id==="content")updateWc();saveDraft()}));
+["title","date","content","tags","yt"].forEach(id=>$(id).addEventListener("input",()=>{if(id==="content")updateWc();saveDraft()}));
 
 $("publish").onclick=async()=>{
-  const title=$("title").value.trim(),content=$("content").value.replace(/\s+$/,""),date=$("date").value||today();
+  const title=$("title").value.trim(),content=$("content").value.replace(/\s+$/,""),date=$("date").value||today(),tags=parseTags($("tags").value);
   if(!title){toast("記得寫標題喔");$("title").focus();return}
-  if(!content.trim()){toast("內容還是空的");$("content").focus();return}
+  const yt=$("yt").value.trim();
+  if(yt&&!/(?:v=|youtu\.be\/|embed\/|shorts\/)[\w-]{11}/.test(yt)){toast("YouTube 連結看起來不對，請貼影片的網址");$("yt").focus();return}
+  if(!content.trim()&&!photos.length&&!yt){toast("內容還是空的");$("content").focus();return}
+  if(busy)return;
+  let paths=[];
+  if(photos.some(p=>p.data)){
+    busy=true;$("publish").disabled=true;
+    try{paths=await uploadPending(editId||("n"+Date.now().toString(36)))}
+    catch(e){toast("照片上傳失敗："+errMsg(e&&e.status),4000);busy=false;setBusy(false);renderPhotos();return}
+    busy=false;renderPhotos();
+  }else paths=photos.map(p=>p.path);
   if(editId){
     const id=editId;
-    const ok=await commit(list=>{const i=list.findIndex(p=>p.id===id);const np={id,title,category:cat,date,content};
+    const ok=await commit(list=>{const i=list.findIndex(p=>p.id===id);const np={id,title,category:cat,date,content};if(tags.length)np.tags=tags;if(paths.length)np.photos=paths;if(yt)np.youtube=yt;
       if(i>=0)list[i]=np;else list.unshift(np);return list},"修改文章："+title,"已儲存修改");
     if(ok)resetForm();
   }else{
-    const ok=await commit(list=>{list.unshift({id:newId(),title,category:cat,date,content});return list},"新增文章："+title,"發佈成功");
+    const ok=await commit(list=>{const np={id:newId(),title,category:cat,date,content};if(tags.length)np.tags=tags;if(paths.length)np.photos=paths;if(yt)np.youtube=yt;list.unshift(np);return list},"新增文章："+title,"發佈成功");
     if(ok)resetForm();
   }
 };
@@ -240,14 +326,14 @@ function renderList(){
   renderFcats();$("total").textContent="共 "+posts.length+" 篇";
   const L=$("list");L.innerHTML="";
   const all=posts.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)))
-    .filter(p=>(fcat==="全部"||p.category===fcat)&&(String(p.title)+String(p.content)).toLowerCase().includes(fq));
+    .filter(p=>(fcat==="全部"||p.category===fcat)&&(String(p.title)+String(p.content)+" "+showTags(p.tags)).toLowerCase().includes(fq));
   const items=all.slice(0,flimit);
   if(!all.length){L.innerHTML='<div class="empty">'+(posts.length?"找不到文章":"還沒有文章")+'</div>';return}
   items.forEach(p=>{
     const d=document.createElement("div");d.className="item";
     d.innerHTML='<div class="t"><b></b><span></span></div><button>修改</button><button class="del">刪除</button>';
     d.querySelector("b").textContent=p.title;
-    d.querySelector("span").textContent=p.category+"・"+p.date;
+    d.querySelector("span").textContent=(p.youtube?"🎵 ":"")+(p.photos&&p.photos.length?"📷 ":"")+p.category+"・"+p.date+(p.tags&&p.tags.length?"・"+showTags(p.tags):"");
     const [eb,db]=d.querySelectorAll("button");
     eb.onclick=()=>{
       if(($("title").value||$("content").value)&&!editId&&!confirm("目前的草稿會被取代，要繼續嗎？"))return;
@@ -264,12 +350,38 @@ function renderList(){
     m.onclick=()=>{flimit+=30;renderList()};L.appendChild(m)}
 }
 
+/* ----- 關於我（about.json）----- */
+const ABOUT_API=`https://api.github.com/repos/${OWNER}/${REPO}/contents/about.json`;
+const ABOUT_DEFAULT="我是哲類，喜歡花蓮的海，喜歡把心裡的話寫下來。\n\n這裡放著我的年度報告、信、詩、歌，還有一些小小的牢騷。\n\n嗨，我可不想稱呼你為陌生人，因為你看見了這篇文章則代表我們有了交集。\n今天還好嗎？一切是否還順利？有人問過你這句話嗎？如果有，恭喜你是一個被受溫暖的人。如果沒有，這類人，來我這兒吧，一個專屬於這類人的小小天地，在這裡希望你可以得到一些些色彩塗抹在你空虛黑白的生活上。我會給你顏料，但，我要你自己揮灑你所得到的精彩穿插在你的人生經驗當中。等到畫布滿了，希望你也能當下一個發放色彩的這類人。";
+async function loadAbout(){
+  const r=await fetch(ABOUT_API+"?ref="+BRANCH,{headers:headers(),cache:"no-store"});
+  if(r.status===404)return {data:{content:ABOUT_DEFAULT,photo:"about.jpg",caption:"2024/1/29 於實驗室"},content:ABOUT_DEFAULT,sha:undefined};
+  if(!r.ok)throw {status:r.status};
+  const j=await r.json();let d={};try{d=JSON.parse(b64dec(j.content))}catch(e){}
+  return {data:d,content:d.content||"",sha:j.sha};
+}
+$("saveAbout").onclick=async()=>{
+  const b=$("saveAbout");if(b.disabled)return;b.disabled=true;b.textContent="上傳中…";
+  try{
+    const cur=await loadAbout();
+    const data={...cur.data,content:$("about").value.replace(/\s+$/,""),caption:$("caption").value.trim()};
+    if(data.photo===undefined)data.photo="about.jpg";
+    const body={message:"修改關於我",content:b64enc(JSON.stringify(data,null,2)+"\n"),branch:BRANCH};
+    if(cur.sha)body.sha=cur.sha;
+    const r=await fetch(ABOUT_API,{method:"PUT",headers:headers(true),body:JSON.stringify(body)});
+    if(!r.ok)throw {status:r.status};
+    toast("「關於我」已儲存，網站約 1 分鐘後更新",3200);
+  }catch(e){toast(errMsg(e&&e.status),4000)}
+  finally{b.disabled=false;b.textContent="儲存「關於我」"}
+};
+
 /* ----- 啟動 ----- */
 async function start(){
   $("setup").hidden=true;$("app").hidden=false;
   let d=null;try{d=JSON.parse(store("draft")||"null")}catch(e){}
   if(d){fillForm(d);cat=CATS.includes(d.category)?d.category:CATS[0];renderCats();if(d.editId)setEditing({id:d.editId,title:d.title});$("draftNote").textContent="已載入上次的草稿"}
   else fillForm({date:today()});
+  loadAbout().then(a=>{$("about").value=a.content;$("caption").value=a.data.caption!==undefined?a.data.caption:"2024/1/29 於實驗室"}).catch(()=>{$("about").value=ABOUT_DEFAULT});
   try{const r=await load();posts=r.posts;renderList()}
   catch(e){$("list").innerHTML='<div class="empty"></div>';$("list").firstChild.textContent=e&&e.status==="JSON"?"posts.json 格式壞掉了":errMsg(e&&e.status)}
 }

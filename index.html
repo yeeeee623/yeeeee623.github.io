@@ -9,22 +9,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f5f1ea; --card:#fffdf8; --ink:#2b2622; --soft:#7a7068; --line:#e7dfd4;
-  --accent:#3d6e8a; --accent2:#c98a6b; --chip:#e4edf2;
-  --trunk:#8a6a4f; --leaf1:#a9cfa0; --leaf2:#77ad7c; --leaf3:#3f7a55; --ginkgo:#dcb54c; --ground:#e6dccb; --flower:#ec9f9b; --pistil:#f4d67c; --letter:#7fb0cc;
-  --shadow:0 6px 24px rgba(60,45,30,.08);
+  --bg:#eef6f8; --card:#fbfdfd; --ink:#1f3440; --soft:#5f7783; --line:rgba(120,170,195,.28);
+  --accent:#2a7fa6; --accent2:#e58f78; --chip:rgba(42,127,166,.1);
+  --glass:rgba(255,255,255,.58); --glassline:rgba(255,255,255,.85);
+  --sky1:#d8eef6; --sky2:#eef6f8; --sea1:#a8d8e8; --sea2:#5fb0cf; --foam:#ffffff; --sand:#efe3c9; --sun:rgba(255,236,190,.9);
+  --trunk:#8a6a4f; --leaf1:#a9cfa0; --leaf2:#77ad7c; --leaf3:#3f7a55; --ginkgo:#dcb54c; --ground:#efe3c9; --flower:#ec9f9b; --pistil:#f4d67c; --letter:#7fb0cc;
+  --shadow:0 8px 30px rgba(40,100,130,.12);
 }
 [data-theme="dark"]{
-  --bg:#171615; --card:#22201e; --ink:#ede6dd; --soft:#a39a90; --line:#36322e;
-  --accent:#8fc0d8; --accent2:#e0a98c; --chip:#263640;
-  --trunk:#a9876a; --leaf1:#6f9f6f; --leaf2:#4f8058; --leaf3:#8fc293; --ginkgo:#cfa640; --ground:#2b2825; --flower:#e0908e; --pistil:#e8c765; --letter:#6d9fbd;
-  --shadow:0 6px 24px rgba(0,0,0,.35);
+  --bg:#0e1a21; --card:#15242c; --ink:#e3eef2; --soft:#8ea7b2; --line:rgba(140,190,215,.18);
+  --accent:#8fd0ea; --accent2:#f0a58f; --chip:rgba(143,208,234,.12);
+  --glass:rgba(22,40,50,.55); --glassline:rgba(160,210,230,.18);
+  --sky1:#0b151b; --sky2:#0e1a21; --sea1:#1d3a4a; --sea2:#14303d; --foam:#9fc9da; --sand:#2a2b28; --sun:rgba(220,235,255,.85);
+  --trunk:#a9876a; --leaf1:#6f9f6f; --leaf2:#4f8058; --leaf3:#8fc293; --ginkgo:#cfa640; --ground:#2a2b28; --flower:#e0908e; --pistil:#e8c765; --letter:#6d9fbd;
+  --shadow:0 8px 30px rgba(0,0,0,.4);
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;line-height:1.8;transition:background .4s,color .4s}
+body{margin:0;background:var(--bg) radial-gradient(1200px 500px at 85% -10%,rgba(255,255,255,.55),transparent 60%) fixed;color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;line-height:1.8;transition:background .4s,color .4s}
 a{color:inherit}
 #progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));z-index:40;transition:width .1s}
-.icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);
+.icon-btn{width:40px;height:40px;border-radius:50%;background:var(--glass);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border:1px solid var(--glassline);color:var(--ink);
   font-size:17px;cursor:pointer;box-shadow:var(--shadow);display:grid;place-items:center;padding:0;flex:none}
 #menuBtn i{display:block;width:17px;height:2px;background:currentColor;border-radius:2px;position:relative}
 #menuBtn i::before,#menuBtn i::after{content:"";position:absolute;left:0;width:17px;height:2px;background:currentColor;border-radius:2px}
@@ -32,7 +36,7 @@ a{color:inherit}
 
 /* 側欄 */
 #scrim{position:fixed;inset:0;background:rgba(20,15,10,.35);opacity:0;pointer-events:none;transition:opacity .3s;z-index:30}
-#side{position:fixed;top:0;left:0;bottom:0;width:min(280px,82vw);background:var(--card);border-right:1px solid var(--line);z-index:35;
+#side{position:fixed;top:0;left:0;bottom:0;width:min(280px,82vw);background:var(--glass);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border:1px solid var(--glassline);border-width:0 1px 0 0;z-index:35;
   transform:translateX(-102%);transition:transform .35s cubic-bezier(.2,.8,.2,1);padding:20px 16px;overflow-y:auto;box-shadow:var(--shadow)}
 body.menu #side{transform:none}
 body.menu #scrim{opacity:1;pointer-events:auto}
@@ -53,19 +57,34 @@ body.menu #scrim{opacity:1;pointer-events:auto}
 .search:focus{border-color:var(--accent)}
 
 /* 上半：樹 */
-#top{position:sticky;top:0;z-index:10;height:52vh;min-height:330px;display:flex;flex-direction:column;
-  background:linear-gradient(var(--bg) 88%,transparent);transition:background .4s}
+#top{position:sticky;top:0;z-index:10;height:52vh;min-height:330px;display:flex;flex-direction:column;overflow:hidden;
+  background:linear-gradient(var(--sky1),var(--sky2) 92%,transparent);transition:background .4s}
 .bar{display:flex;align-items:center;gap:10px;padding:12px 14px 0}
 .bar h1{flex:1;text-align:center;font-family:"Noto Serif TC",serif;font-size:21px;margin:0;letter-spacing:3px;white-space:nowrap}
 .treebox{position:relative;flex:1;min-height:0;max-width:520px;width:100%;margin:0 auto}
-.treebox svg{width:100%;height:100%;display:block}
-.when{position:absolute;left:16px;top:4px;font-family:"Noto Serif TC",serif;font-weight:700;font-size:26px;color:var(--soft);opacity:.35;letter-spacing:1px;pointer-events:none}
-.legend{position:absolute;left:0;right:0;bottom:2px;display:flex;justify-content:center;gap:6px;flex-wrap:wrap;pointer-events:none}
-.legend span{display:flex;align-items:center;gap:3px;font-size:11px;color:var(--soft);background:var(--card);border:1px solid var(--line);
+.treebox svg{position:relative;z-index:2;width:100%;height:100%;display:block}
+.scene{position:absolute;inset:0;z-index:0;pointer-events:none}
+.sun{position:absolute;right:10%;top:6%;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,var(--sun),transparent 70%);filter:blur(2px)}
+[data-theme="dark"] .sun{width:34px;height:34px;right:16%;top:10%;background:radial-gradient(circle at 35% 35%,#f4f8ff,#cfdcec 60%,transparent 72%);
+  box-shadow:0 0 40px 10px rgba(200,220,255,.18)}
+.sea{position:absolute;left:-10%;right:-10%;bottom:8%;height:36%;background:linear-gradient(var(--sea1),var(--sea2));overflow:hidden}
+.sea::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(100deg,transparent 0 22px,rgba(255,255,255,.18) 22px 24px,transparent 24px 60px);
+  background-size:200% 100%;animation:glint 9s linear infinite;mix-blend-mode:soft-light}
+@keyframes glint{to{background-position:-200% 0}}
+.sea .waves{position:absolute;left:0;bottom:-2px;width:100%;height:42px}
+.waves use{animation:drift 12s linear infinite}
+.waves use:nth-of-type(1){fill:var(--foam);opacity:.35;animation-duration:14s}
+.waves use:nth-of-type(2){fill:var(--foam);opacity:.55;animation-duration:9s;animation-delay:-3s}
+.waves use:nth-of-type(3){fill:var(--sand);animation-duration:18s;animation-delay:-5s}
+@keyframes drift{from{transform:translateX(-90px)}to{transform:translateX(85px)}}
+.sand{position:absolute;left:0;right:0;bottom:0;height:9%;background:var(--sand)}
+.when{z-index:3;position:absolute;left:16px;top:4px;font-family:"Noto Serif TC",serif;font-weight:700;font-size:26px;color:var(--soft);opacity:.35;letter-spacing:1px;pointer-events:none}
+.legend{z-index:3;position:absolute;left:0;right:0;bottom:2px;display:flex;justify-content:center;gap:6px;flex-wrap:wrap;pointer-events:none}
+.legend span{display:flex;align-items:center;gap:3px;font-size:11px;color:var(--soft);background:var(--glass);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border:1px solid var(--glassline);
   border-radius:999px;padding:1px 8px 1px 5px}
 .legend svg{width:16px;height:12px}
-#peek{position:absolute;left:50%;bottom:30px;transform:translateX(-50%) translateY(8px);opacity:0;pointer-events:none;transition:all .25s;
-  background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:8px 14px;min-width:200px;max-width:88%;
+#peek{z-index:4;position:absolute;left:50%;bottom:30px;transform:translateX(-50%) translateY(8px);opacity:0;pointer-events:none;transition:all .25s;
+  background:var(--glass);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border:1px solid var(--glassline);border-radius:14px;box-shadow:var(--shadow);padding:8px 14px;min-width:200px;max-width:88%;
   text-decoration:none;color:var(--ink);text-align:center;z-index:3}
 #peek.show{opacity:1;transform:translateX(-50%);pointer-events:auto}
 #peek small{color:var(--accent);font-size:12px}
@@ -84,7 +103,7 @@ body.menu #scrim{opacity:1;pointer-events:auto}
 .yh{position:relative;font-family:"Noto Serif TC",serif;font-weight:700;font-size:20px;color:var(--accent2);margin:22px 0 10px;letter-spacing:2px}
 .yh::before{content:"";position:absolute;left:-22px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:var(--accent2)}
 .yh:first-child{margin-top:0}
-.ent{position:relative;display:block;text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:14px;
+.ent{position:relative;display:block;text-decoration:none;background:var(--glass);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border:1px solid var(--glassline);border-radius:14px;
   padding:11px 14px;margin-bottom:10px;opacity:.55;transition:opacity .35s,transform .35s,box-shadow .35s}
 .ent.on{opacity:1;box-shadow:var(--shadow);transform:translateX(3px)}
 .ent .dot{position:absolute;left:-29px;top:14px;width:22px;height:18px;display:grid;place-items:center;background:var(--bg);border-radius:6px}
@@ -93,12 +112,19 @@ body.menu #scrim{opacity:1;pointer-events:auto}
 .ent h2{font-family:"Noto Serif TC",serif;font-size:17px;font-weight:600;margin:1px 0 2px;line-height:1.5}
 .ent p{margin:0;color:var(--soft);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .empty{text-align:center;color:var(--soft);padding:40px 0}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.tags span,.tags a,#tagList button{font-size:12px;color:var(--accent);background:var(--chip);border:none;border-radius:999px;padding:1px 9px;text-decoration:none;cursor:pointer;font-family:inherit}
+#tagList{display:flex;flex-wrap:wrap;gap:6px;padding:0 8px}
+#tagList button{font-size:13px;padding:3px 10px}
+#tagList button.on{background:var(--accent);color:var(--bg)}
+#tagList .n{opacity:.6;margin-left:3px;font-size:11px}
+#post .tags{margin-top:10px}
 .done{text-align:center;color:var(--soft);font-size:14px;padding:26px 0 6px}
-#jump{position:fixed;right:14px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:12;border:1px solid var(--line);background:var(--card);color:var(--accent);
+#jump{position:fixed;right:14px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:12;background:var(--glass);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border:1px solid var(--glassline);color:var(--accent);
   font:inherit;font-size:13px;padding:8px 14px;border-radius:999px;box-shadow:var(--shadow);cursor:pointer;transition:opacity .3s}
 #jump.hide{opacity:0;pointer-events:none}
 
-.about{margin-top:40px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow);scroll-margin-top:56vh}
+.about{margin-top:40px;background:var(--glass);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border:1px solid var(--glassline);border-radius:16px;padding:22px;box-shadow:var(--shadow);scroll-margin-top:56vh}
 .about h3{font-family:"Noto Serif TC",serif;margin:0 0 6px}
 .about p{margin:0;color:var(--soft)}
 .story-link{display:inline-block;margin-top:14px;color:var(--accent);text-decoration:none;border:1px solid var(--line);background:var(--chip);padding:6px 16px;border-radius:999px;font-size:14px}
@@ -114,6 +140,54 @@ footer{text-align:center;color:var(--soft);font-size:13px;margin-top:40px}
 #post h1{font-family:"Noto Serif TC",serif;font-size:clamp(26px,6vw,34px);margin:16px 0 12px;font-weight:700;line-height:1.4}
 #post .body{font-family:"Noto Serif TC",serif;font-size:var(--fs,18px);white-space:pre-wrap;margin-top:30px;line-height:2.05}
 .poem .body{text-align:center}
+.yt{position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);background:#0b1a22}
+.yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.yt .cover{position:absolute;inset:0;width:100%;height:100%;border:0;padding:0;cursor:pointer;background:#0b1a22 center/cover no-repeat;display:grid;place-items:center}
+.yt .cover span{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.88);display:grid;place-items:center;font-size:24px;color:#2a7fa6;box-shadow:0 6px 24px rgba(0,0,0,.3);padding-left:4px}
+.yt .cover small{position:absolute;left:0;right:0;bottom:12px;color:#fff;font-size:13px;text-shadow:0 1px 6px rgba(0,0,0,.6);text-align:center}
+#pVideo{margin-top:24px}
+#music{display:none;max-width:760px;margin:0 auto;padding:70px 16px 60px}
+#music.show{display:block;animation:rise .6s}
+#music h1{font-family:"Noto Serif TC",serif;font-size:clamp(26px,6vw,34px);margin:16px 0 4px}
+#music .sub{color:var(--soft);font-size:14px;margin:0 0 18px}
+#music h2{font-family:"Noto Serif TC",serif;font-size:19px;margin:30px 0 12px}
+.songs{display:grid;gap:10px}
+.song{display:flex;gap:12px;align-items:center;text-decoration:none;border-radius:14px;padding:10px;background:var(--glass);border:1px solid var(--glassline);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.song img{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex:none}
+.song b{display:block;font-family:"Noto Serif TC",serif;font-weight:600}
+.song span{font-size:12px;color:var(--soft)}
+@media (min-width:1000px){#music{margin-left:280px;max-width:none;padding-left:calc((100vw - 280px - 760px)/2)}}
+#gallery{display:none;max-width:900px;margin:0 auto;padding:70px 14px 60px}
+#gallery.show{display:block;animation:rise .6s}
+#gallery h1{font-family:"Noto Serif TC",serif;font-size:clamp(26px,6vw,34px);margin:16px 6px 4px}
+#gallery .sub{color:var(--soft);font-size:14px;margin:0 6px 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.grid button{padding:0;border:none;background:var(--chip);border-radius:12px;overflow:hidden;cursor:pointer;aspect-ratio:1;box-shadow:var(--shadow)}
+.grid img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.grid button:hover img{transform:scale(1.05)}
+#lb{position:fixed;inset:0;z-index:50;background:rgba(8,20,26,.9);display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+#lb.show{display:flex}
+#lb img{max-width:100%;max-height:72vh;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+#lb .cap{color:#e8f2f6;text-align:center;margin-top:14px;font-size:14px}
+#lb .cap b{display:block;font-family:"Noto Serif TC",serif;font-size:17px;font-weight:600}
+#lb .cap a{display:inline-block;margin-top:8px;color:#9fd8ee;font-size:14px}
+#lb .nav{position:absolute;top:50%;transform:translateY(-50%);border:none;background:rgba(255,255,255,.14);color:#fff;width:44px;height:44px;border-radius:50%;font-size:22px;cursor:pointer}
+#lb .prev{left:10px}#lb .nxt{right:10px}
+#lb .cl{position:absolute;top:14px;right:14px;border:none;background:none;color:#fff;font-size:22px;cursor:pointer}
+@media (min-width:1000px){#gallery{margin-left:280px;max-width:none;padding-left:40px;padding-right:40px}}
+#pPhotos{margin-top:24px}
+.pf{margin:0 0 14px}
+.pf img{display:block;width:100%;border-radius:12px;box-shadow:var(--shadow);background:var(--chip)}
+.body .pf{margin:10px 0 16px;white-space:normal}
+.ent .th{position:absolute;right:12px;top:12px;width:52px;height:52px;border-radius:10px;object-fit:cover;box-shadow:var(--shadow)}
+.ent.hasth .m,.ent.hasth h2,.ent.hasth p{margin-right:62px}
+.photo{display:none;margin:26px 0 0}
+.aboutp .photo{display:block}
+.photo img{display:block;width:100%;max-width:420px;margin:0 auto;border-radius:14px;box-shadow:var(--shadow);border:6px solid var(--card)}
+.photo figcaption{text-align:center;color:var(--soft);font-size:13px;margin-top:10px;letter-spacing:1px}
+.aboutp .meta,.aboutp .tags,.aboutp #shareBtn{display:none}
+.aboutp .pn{grid-template-columns:1fr}
+.aboutp .pn a{text-align:center}
 .letter .body{background-color:var(--card);border:1px solid var(--line);border-radius:6px;box-shadow:var(--shadow);padding:.6em 24px 1.2em;
   background-image:repeating-linear-gradient(transparent 0,transparent calc(2.05em - 1px),var(--line) calc(2.05em - 1px),var(--line) 2.05em);
   background-position:0 0;background-origin:content-box;background-clip:padding-box}
@@ -146,7 +220,11 @@ footer{text-align:center;color:var(--soft);font-size:13px;margin-top:40px}
   <input class="search" id="search" placeholder="搜尋文章…" autocomplete="off">
   <div class="grp">分類</div>
   <div id="cats"></div>
+  <div class="grp" id="tagGrp" hidden>標籤</div>
+  <div id="tagList"></div>
   <div class="grp">更多</div>
+  <a class="item" href="#music" id="musicLink"><span class="ic">🎵</span>音樂</a>
+  <a class="item" href="#photos" id="photosLink"><span class="ic">📷</span>照片<span class="n" id="photoN"></span></a>
   <a class="item" href="story.html"><span class="ic">🌱</span>我的故事</a>
   <a class="item" href="#about" id="aboutLink"><span class="ic">☺︎</span>關於我</a>
 </aside>
@@ -159,6 +237,9 @@ footer{text-align:center;color:var(--soft);font-size:13px;margin-top:40px}
       <button class="icon-btn" id="themeBtn" aria-label="切換深淺色">🌙</button>
     </div>
     <div class="treebox">
+      <div class="scene" aria-hidden="true"><div class="sun"></div><div class="sea">
+        <svg class="waves" viewBox="0 24 150 28" preserveAspectRatio="none"><defs><path id="w" d="M-160 44c30 0 58-18 88-18s58 18 88 18 58-18 88-18 58 18 88 18v44h-352z"/></defs>
+        <use href="#w" x="48" y="0"/><use href="#w" x="48" y="4"/><use href="#w" x="48" y="9"/></svg></div><div class="sand"></div></div>
       <svg id="tree" viewBox="0 0 300 320" preserveAspectRatio="xMidYMax meet" aria-hidden="true"></svg>
       <div class="when" id="when"></div>
       <div class="legend" id="legend"></div>
@@ -171,21 +252,36 @@ footer{text-align:center;color:var(--soft);font-size:13px;margin-top:40px}
     <div class="cur" id="cur" hidden><span id="curText"></span><button id="showAll">看全部</button></div>
     <div class="tl" id="tl"><div class="empty">文章載入中…</div></div>
     <div class="done" id="done" hidden>🌳 這就是到今天為止的樹</div>
-    <div class="about" id="about">
-      <h3>關於我</h3>
-      <p>我是Yeeeee，喜歡花蓮的海，喜歡把心裡的話寫下來。這裡放著我的年度報告、信、詩、歌，還有一些小小的牢騷。</p>
-      <a class="story-link" href="story.html">🌱 看看我的故事 →</a>
-    </div>
     <footer>© Yeeeee・用文字慢慢認識自己</footer>
   </div>
 </div>
 <button id="jump" class="hide">跳到最新 ↓</button>
 
+<section id="music">
+  <button class="back" id="mBack">← 回到時間軸</button>
+  <h1>音樂</h1>
+  <p class="sub">我做的歌，按播放就可以聽</p>
+  <div class="yt" id="plBox"></div>
+  <div id="songSec" hidden><h2>歌和歌詞</h2><div class="songs" id="songs"></div></div>
+</section>
+<section id="gallery">
+  <button class="back" id="gBack">← 回到時間軸</button>
+  <h1>照片</h1>
+  <p class="sub" id="gSub"></p>
+  <div class="grid" id="grid"></div>
+</section>
+<div id="lb" role="dialog" aria-label="照片"><button class="cl" id="lbClose" aria-label="關閉">✕</button><button class="nav prev" id="lbPrev" aria-label="上一張">‹</button>
+  <img alt=""><div class="cap"><b></b><span></span><br><a href="#">讀這篇 →</a></div><button class="nav nxt" id="lbNext" aria-label="下一張">›</button></div>
+
 <article id="post">
   <button class="back" id="backBtn">← 回到時間軸</button>
   <div class="meta" style="margin-top:22px"><span class="tag" id="pTag"></span><span id="pDate"></span><span id="pRead"></span></div>
   <h1 id="pTitle"></h1>
+  <div class="tags" id="pTags"></div>
   <div class="tools"><button onclick="fs(-1)">A−</button><button onclick="fs(1)">A+</button><button onclick="share()" id="shareBtn">複製連結</button></div>
+  <figure class="photo" id="aPhoto"><img alt="Yeeeee 的照片" loading="lazy"><figcaption></figcaption></figure>
+  <div id="pVideo"></div>
+  <div id="pPhotos"></div>
   <div class="body" id="pBody"></div>
   <div class="divider">～ ～ ～</div>
   <div class="pn" id="pn"></div>
@@ -195,7 +291,7 @@ footer{text-align:center;color:var(--soft);font-size:13px;margin-top:40px}
 /* 文章都存在 posts.json，請用 write.html 後台新增或修改 */
 const CATS=["全部","年度報告","信","詩","歌","小牢騷"];
 let posts=[];
-let cur="全部", q="";
+let cur="全部", q="", tag="";
 let N=1;
 const $=id=>document.getElementById(id);
 
@@ -207,7 +303,11 @@ $("themeBtn").onclick=()=>setTheme(document.documentElement.dataset.theme==="dar
 const openMenu=o=>document.body.classList.toggle("menu",o);
 $("menuBtn").onclick=()=>openMenu(true);
 $("closeBtn").onclick=$("scrim").onclick=()=>openMenu(false);
-$("aboutLink").onclick=e=>{e.preventDefault();openMenu(false);if(location.hash)location.hash="";setTimeout(()=>$("about").scrollIntoView({behavior:"smooth"}),50)};
+$("aboutLink").onclick=e=>{e.preventDefault();openMenu(false);openAbout()};
+/* 關於我：內容存在 about.json，可以在後台修改 */
+let aboutPhoto="about.jpg",aboutCaption="2024/1/29 於實驗室";
+let aboutText="我是哲類，喜歡花蓮的海，喜歡把心裡的話寫下來。\n\n這裡放著我的年度報告、信、詩、歌，還有一些小小的牢騷。\n\n嗨，我可不想稱呼你為陌生人，因為你看見了這篇文章則代表我們有了交集。\n今天還好嗎？一切是否還順利？有人問過你這句話嗎？如果有，恭喜你是一個被受溫暖的人。如果沒有，這類人，來我這兒吧，一個專屬於這類人的小小天地，在這裡希望你可以得到一些些色彩塗抹在你空虛黑白的生活上。我會給你顏料，但，我要你自己揮灑你所得到的精彩穿插在你的人生經驗當中。等到畫布滿了，希望你也能當下一個發放色彩的這類人。";
+fetch("about.json?t="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>{if(d){if(d.photo!==undefined)aboutPhoto=d.photo;if(d.caption!==undefined)aboutCaption=d.caption}if(d&&d.content){aboutText=d.content;if(location.hash==="#about")showAbout()}}).catch(()=>{});
 addEventListener("keydown",e=>{if(e.key==="Escape")openMenu(false)});
 
 /* 樹 */
@@ -315,7 +415,7 @@ function plant(list){
   const lg=$("legend");lg.innerHTML="";
   ORDER.forEach(kind=>{const n=items.filter(it=>it.category===kind).length;if(!n)return;
     const sp=document.createElement("span");sp.appendChild(legendIcon(kind));sp.appendChild(document.createTextNode(kind+" "+n));lg.appendChild(sp)});
-  buildTimeline();
+  buildTimeline();buildGallery();buildMusic();
 }
 
 let peekT=0;
@@ -344,7 +444,7 @@ function draw(p){
     const c=it.slot,reach=c.b.isTrunk?1:clamp((c.b.g-c.t+.05)*8);
     const sc=back((p-it.at+.35)/.35)*reach*LS*(KIND[it.category]||KIND["小牢騷"]).size;
     it.g.setAttribute("transform",`translate(${f1(c.x)} ${f1(c.y)}) rotate(${f1(c.ang)}) scale(${Math.max(0,sc).toFixed(3)})`);
-    const show=cur==="全部"||it.category===cur;
+    const show=matches(it);
     it.g.style.opacity=show?1:.15;
     it.g.style.pointerEvents=sc>.3&&show?"auto":"none";
   });
@@ -353,12 +453,17 @@ function draw(p){
 
 /* ---------- 時間軸 ---------- */
 let ents=[];
-function filtering(){return cur!=="全部"||q!==""}
+function filtering(){return cur!=="全部"||q!==""||tag!==""}
+function tagsOf(p){return Array.isArray(p.tags)?p.tags:[]}
+function matches(it){return (cur==="全部"||it.category===cur)&&(!tag||tagsOf(it).includes(tag))&&(!q||(it.title+it.content+" "+tagsOf(it).map(t=>"#"+t).join(" ")).toLowerCase().includes(q))}
+function setTag(t){tag=t;cur="全部";q="";$("search").value="";renderCats();buildTimeline();openMenu(false);
+  if(location.hash.startsWith("#p")){try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}showHome()}scrollTo({top:0})}
+function tagChips(p,box){tagsOf(p).forEach(t=>{const b=document.createElement("span");b.textContent="#"+t;b.onclick=e=>{e.preventDefault();e.stopPropagation();setTag(t)};box.appendChild(b)})}
 function buildTimeline(){
   const T=$("tl");T.innerHTML="";ents=[];
-  const list=items.filter(it=>(cur==="全部"||it.category===cur)&&(it.title+it.content).toLowerCase().includes(q));
+  const list=items.filter(matches);
   $("cur").hidden=!filtering();
-  $("curText").textContent=(q?`搜尋「${q}」`:cur)+`・${list.length} 篇`;
+  $("curText").textContent=(tag?"#"+tag:q?`搜尋「${q}」`:cur)+`・${list.length} 篇`;
   $("intro").hidden=filtering();
   $("done").hidden=!list.length||filtering();
   if(!list.length){T.innerHTML='<div class="empty">'+(posts.length?"找不到文章，換個關鍵字試試看":"還沒有文章")+'</div>';measure();return}
@@ -367,11 +472,13 @@ function buildTimeline(){
     const y=String(it.date).slice(0,4);
     if(y!==year){year=y;const h=document.createElement("div");h.className="yh";h.textContent=y;T.appendChild(h)}
     const a=document.createElement("a");a.className="ent";a.href="#p"+encodeURIComponent(it.id);
-    a.innerHTML='<span class="dot"></span><div class="m"></div><h2></h2><p></p>';
+    a.innerHTML='<span class="dot"></span><div class="m"></div><h2></h2><p></p><div class="tags"></div>';
     a.querySelector(".dot").appendChild(legendIcon(KIND[it.category]?it.category:"小牢騷"));
-    a.querySelector(".m").textContent=it.category+"・"+String(it.date).slice(5).replace("-","/");
+    a.querySelector(".m").textContent=(ytId(it.youtube)?"🎵 ":"")+it.category+"・"+String(it.date).slice(5).replace("-","/");
     a.querySelector("h2").textContent=it.title;
-    a.querySelector("p").textContent=it.content.replace(/\s+/g," ");
+    a.querySelector("p").textContent=it.content.replace(/\[照片\d+\]/g,"").replace(/\s+/g," ");
+    if(Array.isArray(it.photos)&&it.photos.length){const th=document.createElement("img");th.className="th";th.loading="lazy";th.alt="";th.src=it.photos[0];a.appendChild(th);a.classList.add("hasth")}
+    const tg=a.querySelector(".tags");if(tagsOf(it).length)tagChips(it,tg);else tg.remove();
     a._it=it;T.appendChild(a);ents.push(a);
   });
   measure();
@@ -385,13 +492,21 @@ function renderCats(){
     if(c==="全部")ic.textContent="🌳";else ic.appendChild(legendIcon(c));
     b.appendChild(ic);b.appendChild(document.createTextNode(c==="全部"?"全部文章":c));
     const sp=document.createElement("span");sp.className="n";sp.textContent=n;b.appendChild(sp);
-    b.onclick=()=>{cur=c;renderCats();buildTimeline();openMenu(false);if(location.hash)location.hash="";scrollTo({top:0})};
+    b.onclick=()=>{cur=c;tag="";renderTags();renderCats();buildTimeline();openMenu(false);if(location.hash)location.hash="";scrollTo({top:0})};
     $("cats").appendChild(b);
   });
 }
-$("showAll").onclick=()=>{cur="全部";q="";$("search").value="";renderCats();buildTimeline();scrollTo({top:0})};
+function renderTags(){
+  const cnt={};posts.forEach(p=>tagsOf(p).forEach(t=>cnt[t]=(cnt[t]||0)+1));
+  const ks=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]||a.localeCompare(b));
+  $("tagGrp").hidden=!ks.length;$("tagList").innerHTML="";
+  ks.forEach(t=>{const b=document.createElement("button");if(t===tag)b.className="on";b.textContent="#"+t;
+    const n=document.createElement("span");n.className="n";n.textContent=cnt[t];b.appendChild(n);
+    b.onclick=()=>{setTag(t===tag?"":t);renderTags()};$("tagList").appendChild(b)});
+}
+$("showAll").onclick=()=>{cur="全部";q="";tag="";renderTags();$("search").value="";renderCats();buildTimeline();scrollTo({top:0})};
 let qT=0;
-$("search").oninput=e=>{clearTimeout(qT);qT=setTimeout(()=>{q=e.target.value.trim().toLowerCase();buildTimeline();scrollTo({top:0})},250)};
+$("search").oninput=e=>{clearTimeout(qT);qT=setTimeout(()=>{const v=e.target.value.trim().toLowerCase();if(/^#[^\s#]+$/.test(v)){q="";tag=v.slice(1);renderTags()}else{q=v}buildTimeline();scrollTo({top:0})},250)};
 $("search").onkeydown=e=>{if(e.key==="Enter"){e.target.blur();openMenu(false)}};
 
 /* ---------- 捲動 → 樹長大 ---------- */
@@ -425,11 +540,14 @@ $("jump").onclick=()=>{const l=ents[ents.length-1];if(l)l.scrollIntoView({behavi
 
 /* ---------- 文章頁 ---------- */
 function showPost(id){
+  $("gallery").classList.remove("show");$("music").classList.remove("show");
   const i=items.findIndex(p=>String(p.id)===id); if(i<0){location.hash="";return}
   const p=items[i];
   $("pTag").textContent=p.category;$("pDate").textContent=p.date;
-  $("pRead").textContent="約 "+Math.max(1,Math.round(p.content.length/300))+" 分鐘";
-  $("pTitle").textContent=p.title;$("pBody").textContent=p.content;
+  $("pRead").textContent=(Array.isArray(p.photos)&&p.photos.length?"📷 "+p.photos.length+" 張・":"")+"約 "+Math.max(1,Math.round(p.content.length/300))+" 分鐘";
+  $("pTitle").textContent=p.title;$("pTags").innerHTML="";tagChips(p,$("pTags"));renderBody(p);
+  const vid=ytId(p.youtube);$("pVideo").innerHTML="";if(vid){const bx=document.createElement("div");bx.className="yt";$("pVideo").appendChild(bx);ytBox(bx,{video:vid,label:"播放這首歌"})}
+  $("post").classList.remove("aboutp");
   $("post").classList.toggle("poem",p.category==="詩");
   $("post").classList.toggle("letter",p.category==="信");
   const prev=items[i-1],next=items[i+1];
@@ -441,18 +559,119 @@ function showPost(id){
   $("post").classList.remove("show");void $("post").offsetWidth;$("post").classList.add("show");
   scrollTo(0,0);
 }
+/* 文章照片：內容裡寫 [照片1] 就放在那個位置，其他的放在文字上面 */
+function photoFig(src){const f=document.createElement("figure");f.className="pf";const im=document.createElement("img");im.loading="lazy";im.alt="";im.src=src;f.appendChild(im);return f}
+function renderBody(p){
+  const ph=Array.isArray(p.photos)?p.photos:[],B=$("pBody"),T=$("pPhotos");B.innerHTML="";T.innerHTML="";
+  const used=new Set();
+  const parts=String(p.content).split(/(\[照片\d+\])/);
+  const isPh=x=>{const m=x&&x.match(/^\[照片(\d+)\]$/);return m&&ph[m[1]-1]?+m[1]-1:-1};
+  parts.forEach((part,k)=>{
+    const i=isPh(part);
+    if(i>=0){used.add(i);B.appendChild(photoFig(ph[i]));return}
+    let t=part;if(k>0&&isPh(parts[k-1])>=0)t=t.replace(/^\n/,"");if(k<parts.length-1&&isPh(parts[k+1])>=0)t=t.replace(/\n$/,"");
+    if(t)B.appendChild(document.createTextNode(t));
+  });
+  ph.forEach((src,i)=>{if(!used.has(i))T.appendChild(photoFig(src))});
+}
+/* ---------- 音樂 ---------- */
+/* YouTube 播放清單：在 YouTube 把歌加進這個清單，網站就會自動更新 */
+const PLAYLIST="PLicz6_fbTc_DjRK03dlu9oIYUQuu34VKj";
+function ytId(u){const m=String(u||"").match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/);return m?m[1]:(/^[\w-]{11}$/.test(u)?u:"")}
+/* 先放封面，按了才載入播放器，網站不會變慢 */
+function ytBox(box,{video,list,label}){
+  box.innerHTML="";const c=document.createElement("button");c.className="cover";c.setAttribute("aria-label","播放");
+  if(video)c.style.backgroundImage=`url(https://i.ytimg.com/vi/${video}/hqdefault.jpg)`;
+  c.innerHTML='<span>▶</span><small></small>';c.querySelector("small").textContent=label||"";
+  c.onclick=()=>{const f=document.createElement("iframe");
+    f.src=video?`https://www.youtube-nocookie.com/embed/${video}?autoplay=1&rel=0${list?"&list="+list:""}`:`https://www.youtube-nocookie.com/embed/videoseries?list=${list}&autoplay=1&rel=0`;
+    f.allow="autoplay; encrypted-media; picture-in-picture";f.allowFullscreen=true;f.title=label||"YouTube";box.innerHTML="";box.appendChild(f)};
+  box.appendChild(c);
+}
+function buildMusic(){
+  ytBox($("plBox"),{video:"YSnzzpAm-P4",list:PLAYLIST,label:"播放整個歌單"});
+  const songs=items.filter(p=>ytId(p.youtube)).slice().reverse();
+  $("songSec").hidden=!songs.length;$("songs").innerHTML="";
+  songs.forEach(p=>{const a=document.createElement("a");a.className="song";a.href="#p"+encodeURIComponent(p.id);
+    a.innerHTML='<img alt="" loading="lazy"><div><b></b><span></span></div>';a.querySelector("img").src=`https://i.ytimg.com/vi/${ytId(p.youtube)}/mqdefault.jpg`;
+    a.querySelector("b").textContent=p.title;a.querySelector("span").textContent=p.category+"・"+p.date;$("songs").appendChild(a)});
+}
+function showMusic(){
+  $("post").classList.remove("show");$("gallery").classList.remove("show");$("home").style.display="none";$("jump").style.display="none";
+  document.title="音樂｜Yeeeee的小角落";
+  $("music").classList.remove("show");void $("music").offsetWidth;$("music").classList.add("show");scrollTo(0,0);
+}
+function openMusic(){
+  if($("home").style.display!=="none")lastY=scrollY;
+  try{history.pushState(null,"","#music");pushed++}catch(e){}
+  showMusic();
+}
+$("musicLink").onclick=e=>{e.preventDefault();openMenu(false);openMusic()};
+$("mBack").onclick=()=>$("backBtn").onclick();
+
+/* ---------- 照片牆 ---------- */
+let gal=[],gi=0;
+function buildGallery(){
+  gal=[];items.slice().reverse().forEach(p=>(Array.isArray(p.photos)?p.photos:[]).forEach(src=>gal.push({src,p})));
+  $("photoN").textContent=gal.length||"";
+  $("gSub").textContent=gal.length?`共 ${gal.length} 張，點照片可以看大圖`:"還沒有照片";
+  const G=$("grid");G.innerHTML="";
+  gal.forEach((g,i)=>{const b=document.createElement("button");const im=document.createElement("img");im.loading="lazy";im.alt=g.p.title;im.src=g.src;b.appendChild(im);b.onclick=()=>openLb(i);G.appendChild(b)});
+}
+function openLb(i){if(!gal.length)return;gi=(i+gal.length)%gal.length;const g=gal[gi],L=$("lb");
+  L.querySelector("img").src=g.src;L.querySelector(".cap b").textContent=g.p.title;L.querySelector(".cap span").textContent=g.p.category+"・"+g.p.date;
+  L.querySelector(".cap a").setAttribute("href","#p"+encodeURIComponent(g.p.id));L.classList.add("show")}
+const closeLb=()=>$("lb").classList.remove("show");
+$("lbClose").onclick=closeLb;$("lbPrev").onclick=()=>openLb(gi-1);$("lbNext").onclick=()=>openLb(gi+1);
+$("lb").onclick=e=>{if(e.target.id==="lb")closeLb()};
+$("lb").querySelector(".cap a").addEventListener("click",()=>closeLb());
+addEventListener("keydown",e=>{if(!$("lb").classList.contains("show"))return;if(e.key==="Escape")closeLb();if(e.key==="ArrowLeft")openLb(gi-1);if(e.key==="ArrowRight")openLb(gi+1)});
+let tx=0;$("lb").addEventListener("touchstart",e=>tx=e.touches[0].clientX,{passive:true});
+$("lb").addEventListener("touchend",e=>{const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>50)openLb(gi+(d<0?1:-1))});
+function showGallery(){
+  $("music").classList.remove("show");$("post").classList.remove("show");$("home").style.display="none";$("jump").style.display="none";
+  document.title="照片｜Yeeeee的小角落";
+  $("gallery").classList.remove("show");void $("gallery").offsetWidth;$("gallery").classList.add("show");scrollTo(0,0);
+}
+function openGallery(){
+  if($("home").style.display!=="none")lastY=scrollY;
+  try{history.pushState(null,"","#photos");pushed++}catch(e){}
+  showGallery();
+}
+$("photosLink").onclick=e=>{e.preventDefault();openMenu(false);openGallery()};
+$("gBack").onclick=()=>$("backBtn").onclick();
+function showAbout(){
+  $("gallery").classList.remove("show");$("music").classList.remove("show");$("pVideo").innerHTML="";
+  $("post").classList.remove("poem","letter");$("post").classList.add("aboutp");
+  $("pTitle").textContent="關於我";$("pBody").textContent=aboutText;$("pPhotos").innerHTML="";
+  const ph=$("aPhoto");ph.hidden=!aboutPhoto;if(aboutPhoto){const im=ph.querySelector("img");if(im.getAttribute("src")!==aboutPhoto)im.src=aboutPhoto;ph.querySelector("figcaption").textContent=aboutCaption}
+  $("pn").innerHTML='<a href="story.html">看看我的故事<b>🌱 從一顆種子，慢慢長成一棵樹</b></a>';
+  document.title="關於我｜Yeeeee的小角落";
+  $("home").style.display="none";$("jump").style.display="none";
+  $("post").classList.remove("show");void $("post").offsetWidth;$("post").classList.add("show");
+  scrollTo(0,0);
+}
+function openAbout(){
+  if($("home").style.display!=="none")lastY=scrollY;
+  try{history.pushState(null,"","#about");pushed++}catch(e){}
+  showAbout();
+}
 let lastY=0,pushed=0;
 function showHome(){
-  const was=$("post").classList.contains("show");
+  const was=$("post").classList.contains("show")||$("gallery").classList.contains("show")||$("music").classList.contains("show");
+  $("gallery").classList.remove("show");$("music").classList.remove("show");
   $("post").classList.remove("show");$("home").style.display="block";$("jump").style.display="";
   document.title="Yeeeee的小角落";$("progress").style.width=0;
   if(was)scrollTo(0,lastY);
   measure();
 }
 function route(){
-  const m=location.hash.match(/^#p(.+)$/);
+  const m=location.hash!=="#photos"&&location.hash.match(/^#p(.+)$/);
   if(m){if($("home").style.display!=="none")lastY=scrollY;showPost(decodeURIComponent(m[1]))}
-  else{showHome();if(location.hash==="#about")setTimeout(()=>$("about").scrollIntoView(),30)}
+  else if(location.hash==="#music"){if($("home").style.display!=="none")lastY=scrollY;showMusic()}
+  else if(location.hash==="#photos"){if($("home").style.display!=="none")lastY=scrollY;showGallery()}
+  else if(location.hash==="#about"){if($("home").style.display!=="none")lastY=scrollY;showAbout()}
+  else showHome();
 }
 /* 點文章：直接打開（預覽環境不支援網址切換時也能讀） */
 function openPost(id){
@@ -462,14 +681,14 @@ function openPost(id){
 }
 document.addEventListener("click",e=>{
   const a=e.target.closest&&e.target.closest("a[href]");if(!a)return;
-  const m=a.getAttribute("href").match(/#p(.+)$/);if(!m)return;
+  const h=a.getAttribute("href");if(/#photos$/.test(h))return;const m=h.match(/#p(.+)$/);if(!m)return;
   e.preventDefault();openPost(decodeURIComponent(m[1]));
 });
 $("backBtn").onclick=()=>{
   if(pushed>0){pushed--;history.back()}
   else{try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}showHome()}
 };
-addEventListener("popstate",()=>{if(!location.hash.startsWith("#p")&&pushed>0)pushed=0;route()});
+addEventListener("popstate",()=>{if(!(location.hash.startsWith("#p")&&location.hash!=="#photos")&&location.hash!=="#about"&&location.hash!=="#photos"&&location.hash!=="#music"&&pushed>0)pushed=0;route()});
 addEventListener("scroll",()=>{
   if(!$("post").classList.contains("show"))return;
   const h=document.documentElement;$("progress").style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight||1)*100)+"%";
@@ -487,7 +706,7 @@ fetch("posts.json?t="+Date.now(),{cache:"no-store"})
   .then(r=>{if(!r.ok)throw new Error(r.status);return r.json()})
   .then(d=>{
     posts=Array.isArray(d)?d:[];
-    renderCats();
+    renderCats();renderTags();
     plant(posts);
     if(!posts.length)buildTimeline();
     route();addEventListener("hashchange",route);
