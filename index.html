@@ -225,7 +225,6 @@ footer{text-align:center;color:var(--soft);font-size:13px;margin-top:40px}
   <div class="grp">更多</div>
   <a class="item" href="#music" id="musicLink"><span class="ic">🎵</span>音樂</a>
   <a class="item" href="#photos" id="photosLink"><span class="ic">📷</span>照片<span class="n" id="photoN"></span></a>
-  <a class="item" href="story.html"><span class="ic">🌱</span>我的故事</a>
   <a class="item" href="#about" id="aboutLink"><span class="ic">☺︎</span>關於我</a>
 </aside>
 
@@ -645,7 +644,7 @@ function showAbout(){
   $("post").classList.remove("poem","letter");$("post").classList.add("aboutp");
   $("pTitle").textContent="關於我";$("pBody").textContent=aboutText;$("pPhotos").innerHTML="";
   const ph=$("aPhoto");ph.hidden=!aboutPhoto;if(aboutPhoto){const im=ph.querySelector("img");if(im.getAttribute("src")!==aboutPhoto)im.src=aboutPhoto;ph.querySelector("figcaption").textContent=aboutCaption}
-  $("pn").innerHTML='<a href="story.html">看看我的故事<b>🌱 從一顆種子，慢慢長成一棵樹</b></a>';
+  $("pn").innerHTML="";
   document.title="關於我｜Yeeeee的小角落";
   $("home").style.display="none";$("jump").style.display="none";
   $("post").classList.remove("show");void $("post").offsetWidth;$("post").classList.add("show");
