@@ -11,13 +11,13 @@
 :root{
   --bg:#f5f1ea; --card:#fffdf8; --ink:#2b2622; --soft:#7a7068; --line:#e7dfd4;
   --accent:#3d6e8a; --accent2:#c98a6b; --chip:#e4edf2;
-  --trunk:#8a6a4f; --leaf1:#a9cfa0; --leaf2:#77ad7c; --leaf3:#3f7a55; --ginkgo:#dcb54c; --ground:#e6dccb; --flower:#ec9f9b; --pistil:#f4d67c;
+  --trunk:#8a6a4f; --leaf1:#a9cfa0; --leaf2:#77ad7c; --leaf3:#3f7a55; --ginkgo:#dcb54c; --ground:#e6dccb; --flower:#ec9f9b; --pistil:#f4d67c; --letter:#7fb0cc;
   --shadow:0 6px 24px rgba(60,45,30,.08);
 }
 [data-theme="dark"]{
   --bg:#171615; --card:#22201e; --ink:#ede6dd; --soft:#a39a90; --line:#36322e;
   --accent:#8fc0d8; --accent2:#e0a98c; --chip:#263640;
-  --trunk:#a9876a; --leaf1:#6f9f6f; --leaf2:#4f8058; --leaf3:#8fc293; --ginkgo:#cfa640; --ground:#2b2825; --flower:#e0908e; --pistil:#e8c765;
+  --trunk:#a9876a; --leaf1:#6f9f6f; --leaf2:#4f8058; --leaf3:#8fc293; --ginkgo:#cfa640; --ground:#2b2825; --flower:#e0908e; --pistil:#e8c765; --letter:#6d9fbd;
   --shadow:0 6px 24px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
@@ -191,9 +191,10 @@ const KIND={
   "小牢騷":{d:"M0 0C2-4 8-4.8 10.5 0C8 4.8 2 4 0 0Z",fills:["var(--leaf1)","var(--leaf2)"],size:.95},
   "詩":{d:"M0 0C4-2.4 11-2.8 17 0C11 2.8 4 2.4 0 0Z",fills:["var(--leaf3)"],size:1},
   "歌":{d:"M0 0L8.5-6.5Q14.5 0 8.5 6.5Z",fills:["var(--ginkgo)"],size:1.05},
-  "年度報告":{flower:true,size:1.9}
+  "年度報告":{flower:true,size:1.9},
+  "信":{d:"M0 0C3-4.5 9.5-5.5 14 0C9.5 5.5 3 4.5 0 0Z",fills:["var(--letter)"],size:1}
 };
-const ORDER=["年度報告","詩","歌","小牢騷"];
+const ORDER=["年度報告","信","詩","歌","小牢騷"];
 function shape(kind,parent,k){
   const K=KIND[kind]||KIND["小牢騷"];
   if(K.flower){
